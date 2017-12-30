@@ -1,3 +1,4 @@
 (fp_lib_table
   (lib (name custom)(type KiCad)(uri "$(KIPRJMOD)/custom.pretty")(options "")(descr ""))
+  (lib (name P090S-04F20BR10K)(type Legacy)(uri "$(KIPRJMOD)/legacy.pretty/P090S-04F20BR10K.mod")(options "")(descr ""))
 )

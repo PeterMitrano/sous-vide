@@ -1,0 +1,58 @@
+PCBNEW-LibModule-V1  
+# encoding utf-8
+Units mm
+$INDEX
+TRIM_P090S-04F20BR10K
+$EndINDEX
+$MODULE TRIM_P090S-04F20BR10K
+Po 0 0 0 15 00000000 00000000 ~~
+Li TRIM_P090S-04F20BR10K
+Cd 
+Sc 00000000
+At STD
+Op 0 0 0
+.SolderMask 0
+.SolderPaste 0
+T0 -4.46557 -4.64079 1.00125 1.00125 0 0.05 N V 21 "TRIM_P090S-04F20BR10K"
+T1 -3.82817 10.3736 1.00083 1.00083 0 0.05 N V 21 "VAL**"
+$PAD
+Sh "PAD" R 2.2 1.8 0 0 900
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -4.4 -1.1
+$EndPAD
+$PAD
+Sh "PAD." R 2.2 1.8 0 0 900
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 4.4 -1.1
+$EndPAD
+$PAD
+Sh "1" O 3.6 1.8 0 0 900
+Dr 1.2 0 0
+At STD N 00E0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -2.5 5.9
+$EndPAD
+$PAD
+Sh "3" O 3.6 1.8 0 0 900
+Dr 1.2 0 0
+At STD N 00E0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 2.5 5.9
+$EndPAD
+$PAD
+Sh "2" O 3.6 1.8 0 0 900
+Dr 1.2 0 0
+At STD N 00E0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 0 5.9
+$EndPAD
+$EndMODULE TRIM_P090S-04F20BR10K

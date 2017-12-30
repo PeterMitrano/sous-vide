@@ -1,4 +1,4 @@
-update=Thu 28 Dec 2017 18:08:51 EST
+update=Fri 29 Dec 2017 22:52:46 EST
 version=1
 last_client=kicad
 [pcbnew]
@@ -107,3 +107,4 @@ LibName65=custom/rac01
 LibName66=custom/g5le
 LibName67=custom/node_mcu1
 LibName68=custom/lcd_backpack
+LibName69=snapEDA/P090S-04F20BR10K
