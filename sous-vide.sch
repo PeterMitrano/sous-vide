@@ -1,0 +1,785 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:switches
+LIBS:relays
+LIBS:motors
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:misc
+LIBS:nodemcu
+LIBS:sensors
+LIBS:NodeMCU_TEMPLATE
+LIBS:SparkFun-Aesthetics
+LIBS:SparkFun-Batteries
+LIBS:SparkFun-Boards
+LIBS:SparkFun-Capacitors
+LIBS:SparkFun-Clocks
+LIBS:SparkFun-Coils
+LIBS:SparkFun-Connectors
+LIBS:SparkFun-DiscreteSemi
+LIBS:SparkFun-Displays
+LIBS:SparkFun-Electromechanical
+LIBS:SparkFun-Fuses
+LIBS:SparkFun-GPS
+LIBS:SparkFun-Hardware
+LIBS:SparkFun-IC-Amplifiers
+LIBS:SparkFun-IC-Comms
+LIBS:SparkFun-IC-Conversion
+LIBS:SparkFun-IC-Logic
+LIBS:SparkFun-IC-Memory
+LIBS:SparkFun-IC-Microcontroller
+LIBS:SparkFun-IC-Power
+LIBS:SparkFun-IC-Special-Function
+LIBS:SparkFun-Jumpers
+LIBS:SparkFun-LED
+LIBS:SparkFun-PowerSymbols
+LIBS:SparkFun-Resistors
+LIBS:SparkFun-RF
+LIBS:SparkFun-Sensors
+LIBS:SparkFun-Switches
+LIBS:rac01
+LIBS:g5le
+LIBS:node_mcu1
+LIBS:lcd_backpack
+LIBS:sous-vide-cache
+EELAYER 25 0
+EELAYER END
+$Descr USLetter 11000 8500
+encoding utf-8
+Sheet 1 1
+Title "sous-vide"
+Date "2017-12-28"
+Rev "0"
+Comp "peter mitrano"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L SW_Push_Dual SW2
+U 1 1 5A447440
+P 1850 4500
+F 0 "SW2" H 1900 4600 50  0000 L CNN
+F 1 "SW_Push_Dual" H 1850 4200 50  0000 C CNN
+F 2 "Buttons_Switches_THT:SW_TH_Tactile_Omron_B3F-10xx" H 1850 4700 50  0001 C CNN
+F 3 "http://omronfs.omron.com/en_US/ecb/products/pdf/en-b3f.pdf" H 1850 4700 50  0001 C CNN
+F 4 "SW400-ND" H 1850 4500 60  0001 C CNN "Part #"
+	1    1850 4500
+	1    0    0    1   
+$EndComp
+$Comp
+L SW_Push_Dual SW1
+U 1 1 5A447497
+P 1850 3700
+F 0 "SW1" H 1900 3800 50  0000 L CNN
+F 1 "SW_Push_Dual" H 1850 3430 50  0000 C CNN
+F 2 "Buttons_Switches_THT:SW_TH_Tactile_Omron_B3F-10xx" H 1850 3900 50  0001 C CNN
+F 3 "http://omronfs.omron.com/en_US/ecb/products/pdf/en-b3f.pdf" H 1850 3900 50  0001 C CNN
+F 4 "SW400-ND" H 1850 3700 60  0001 C CNN "Part #"
+	1    1850 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L RAC01 U2
+U 1 1 5A453F6B
+P 7000 2400
+F 0 "U2" H 7350 2000 60  0000 C CNN
+F 1 "RAC01" H 7300 2100 60  0000 C CNN
+F 2 "custom:RAC01-05SC" H 7000 2400 60  0001 C CNN
+F 3 "https://www.recom-power.com/pdf/Powerline-AC-DC/RAC01_02-SC.pdf" H 7000 2400 60  0001 C CNN
+	1    7000 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L G5LE U3
+U 1 1 5A454255
+P 7750 4100
+F 0 "U3" H 7750 3700 60  0000 C CNN
+F 1 "G5LE" H 7750 3800 60  0000 C CNN
+F 2 "Relays_THT:Relay_SPDT_OMRON-G5LE-1" H 7750 4100 60  0001 C CNN
+F 3 "https://media.digikey.com/pdf/Data%20Sheets/Omron%20PDFs/G5LE-E_G.pdf" H 7750 4100 60  0001 C CNN
+	1    7750 4100
+	1    0    0    1   
+$EndComp
+$Comp
+L Screw_Terminal_01x02 J2
+U 1 1 5A4549FC
+P 5550 2600
+F 0 "J2" H 5550 2700 50  0000 C CNN
+F 1 "Conn_01x02" H 5550 2400 50  0000 C CNN
+F 2 "custom:NC6-P108-02" H 5550 2600 50  0001 C CNN
+F 3 "" H 5550 2600 50  0001 C CNN
+	1    5550 2600
+	-1   0    0    -1  
+$EndComp
+$Comp
+L GND #PWR01
+U 1 1 5A456926
+P 5050 5200
+F 0 "#PWR01" H 5050 4950 50  0001 C CNN
+F 1 "GND" H 5050 5050 50  0000 C CNN
+F 2 "" H 5050 5200 50  0001 C CNN
+F 3 "" H 5050 5200 50  0001 C CNN
+	1    5050 5200
+	-1   0    0    1   
+$EndComp
+$Comp
+L node_mcu1.0 U1
+U 1 1 5A457536
+P 3950 4650
+F 0 "U1" H 3950 2900 60  0000 C CNN
+F 1 "node_mcu1.0" H 3950 4600 60  0000 C CNN
+F 2 "custom:NodeMCU_1_0" H 3700 4600 60  0001 C CNN
+F 3 "" H 3700 4600 60  0001 C CNN
+	1    3950 4650
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR02
+U 1 1 5A459A02
+P 5600 5050
+F 0 "#PWR02" H 5600 4800 50  0001 C CNN
+F 1 "GND" H 5600 4900 50  0000 C CNN
+F 2 "" H 5600 5050 50  0001 C CNN
+F 3 "" H 5600 5050 50  0001 C CNN
+	1    5600 5050
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR03
+U 1 1 5A45B5B5
+P 5300 4850
+F 0 "#PWR03" H 5300 4600 50  0001 C CNN
+F 1 "GND" H 5300 4700 50  0000 C CNN
+F 2 "" H 5300 4850 50  0001 C CNN
+F 3 "" H 5300 4850 50  0001 C CNN
+	1    5300 4850
+	0    1    1    0   
+$EndComp
+$Comp
+L RESISTOR0402 R5
+U 1 1 5A45B5F6
+P 5500 4850
+F 0 "R5" H 5450 4900 45  0000 L BNN
+F 1 "11k" H 5450 4750 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 5500 5000 20  0001 C CNN
+F 3 "" H 5500 4850 60  0001 C CNN
+F 4 " " H 5500 5050 60  0000 C CNN "Field4"
+	1    5500 4850
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR04
+U 1 1 5A45BBA5
+P 6150 4950
+F 0 "#PWR04" H 6150 4700 50  0001 C CNN
+F 1 "GND" H 6150 4800 50  0000 C CNN
+F 2 "" H 6150 4950 50  0001 C CNN
+F 3 "" H 6150 4950 50  0001 C CNN
+	1    6150 4950
+	0    1    1    0   
+$EndComp
+$Comp
+L RESISTOR0402 R7
+U 1 1 5A45BBE8
+P 6350 4950
+F 0 "R7" H 6300 5000 45  0000 L BNN
+F 1 "11k" H 6300 4850 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 6350 5100 20  0001 C CNN
+F 3 "" H 6350 4950 60  0001 C CNN
+F 4 " " H 6350 5150 60  0000 C CNN "Field4"
+	1    6350 4950
+	-1   0    0    1   
+$EndComp
+$Comp
+L RESISTOR0402 R6
+U 1 1 5A45D230
+P 6000 3700
+F 0 "R6" H 5950 3750 45  0000 L BNN
+F 1 "1k" H 5950 3600 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 6000 3850 20  0001 C CNN
+F 3 "" H 6000 3700 60  0001 C CNN
+F 4 " " H 6000 3900 60  0000 C CNN "Field4"
+	1    6000 3700
+	-1   0    0    1   
+$EndComp
+$Comp
+L 2N3904 Q1
+U 1 1 5A446FBC
+P 6300 3500
+F 0 "Q1" H 6500 3575 50  0000 L CNN
+F 1 "2N3904" H 6500 3500 50  0000 L CNN
+F 2 "TO_SOT_Packages_THT:TO-92_Molded_Narrow" H 6500 3425 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/MM/MMBT3904.pdf" H 6300 3500 50  0001 L CNN
+	1    6300 3500
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	6700 4050 4650 4050
+Wire Wire Line
+	2950 2800 2950 3250
+Wire Wire Line
+	2950 3250 3250 3250
+Wire Wire Line
+	6600 4900 6600 5050
+Wire Wire Line
+	4650 4150 5900 4150
+Wire Wire Line
+	4750 5350 4750 3650
+Wire Wire Line
+	4750 3650 4650 3650
+Wire Wire Line
+	4850 5350 4850 3750
+Wire Wire Line
+	4850 3750 4650 3750
+Wire Wire Line
+	6550 4950 6600 4950
+Connection ~ 6600 4950
+Wire Wire Line
+	6850 3850 7100 3850
+$Comp
+L GND #PWR05
+U 1 1 5A45DF14
+P 6100 3400
+F 0 "#PWR05" H 6100 3150 50  0001 C CNN
+F 1 "GND" H 6100 3250 50  0000 C CNN
+F 2 "" H 6100 3400 50  0001 C CNN
+F 3 "" H 6100 3400 50  0001 C CNN
+	1    6100 3400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5350 2800 2950 2800
+Wire Wire Line
+	5350 2800 5350 3700
+Wire Wire Line
+	6500 3400 7050 3400
+Wire Wire Line
+	6850 3400 6850 3500
+Wire Wire Line
+	5350 3700 5800 3700
+Wire Wire Line
+	6200 3700 6300 3700
+Wire Wire Line
+	7050 3250 7150 3250
+$Comp
+L GND #PWR06
+U 1 1 5A465EEF
+P 3200 5100
+F 0 "#PWR06" H 3200 4850 50  0001 C CNN
+F 1 "GND" H 3200 4950 50  0000 C CNN
+F 2 "" H 3200 5100 50  0001 C CNN
+F 3 "" H 3200 5100 50  0001 C CNN
+	1    3200 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR07
+U 1 1 5A465F60
+P 7500 3250
+F 0 "#PWR07" H 7500 3000 50  0001 C CNN
+F 1 "GND" H 7500 3100 50  0000 C CNN
+F 2 "" H 7500 3250 50  0001 C CNN
+F 3 "" H 7500 3250 50  0001 C CNN
+	1    7500 3250
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	7500 3250 7450 3250
+$Comp
+L GND #PWR08
+U 1 1 5A466063
+P 2450 4500
+F 0 "#PWR08" H 2450 4250 50  0001 C CNN
+F 1 "GND" H 2450 4350 50  0000 C CNN
+F 2 "" H 2450 4500 50  0001 C CNN
+F 3 "" H 2450 4500 50  0001 C CNN
+	1    2450 4500
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2050 3900 2200 3900
+Wire Wire Line
+	6700 4050 6700 5050
+Wire Wire Line
+	4650 4450 6600 4450
+Wire Wire Line
+	6600 4450 6600 4600
+Wire Wire Line
+	5750 4500 5750 4500
+Wire Wire Line
+	5750 4500 5750 4450
+Connection ~ 5750 4450
+$Comp
+L D D3
+U 1 1 5A44722D
+P 5750 4650
+F 0 "D3" H 5750 4750 50  0000 C CNN
+F 1 "D" H 5750 4550 50  0000 C CNN
+F 2 "Diodes_THT:D_DO-35_SOD27_P7.62mm_Horizontal" H 5750 4650 50  0001 C CNN
+F 3 "https://www.fairchildsemi.com/datasheets/1N/1N914.pdf" H 5750 4650 50  0001 C CNN
+F 4 "1N4148FS-ND" H 5750 4650 60  0001 C CNN "Part #"
+	1    5750 4650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5750 4800 5750 5050
+Wire Wire Line
+	5700 4850 5750 4850
+Connection ~ 5750 4850
+Wire Wire Line
+	6850 3850 6850 3800
+Connection ~ 6850 3850
+Wire Wire Line
+	7100 3650 7050 3650
+Wire Wire Line
+	7050 3650 7050 3400
+Connection ~ 6850 3400
+$Comp
+L RESISTOR0402 R8
+U 1 1 5A46A0C8
+P 6850 3250
+F 0 "R8" H 6800 3300 45  0000 L BNN
+F 1 "100" H 6800 3150 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 6850 3400 20  0001 C CNN
+F 3 "" H 6850 3250 60  0001 C CNN
+F 4 " " H 6850 3450 60  0000 C CNN "Field4"
+	1    6850 3250
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6650 3250 6650 3400
+Connection ~ 6650 3400
+$Comp
+L RESISTOR0402 R4
+U 1 1 5A46AC02
+P 3200 4600
+F 0 "R4" H 3150 4650 45  0000 L BNN
+F 1 "100" H 3150 4500 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 3200 4750 20  0001 C CNN
+F 3 "" H 3200 4600 60  0001 C CNN
+F 4 " " H 3200 4800 60  0000 C CNN "Field4"
+	1    3200 4600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3200 4400 3200 4350
+Wire Wire Line
+	3200 4350 3250 4350
+$Comp
+L RESISTOR0402 R2
+U 1 1 5A46B1D8
+P 2250 4500
+F 0 "R2" H 2200 4550 45  0000 L BNN
+F 1 "11k" H 2200 4400 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 2250 4650 20  0001 C CNN
+F 3 "http://www.yageo.com/documents/recent/Yageo%20LR_CFR_2013.pdf" H 2250 4500 60  0001 C CNN
+	1    2250 4500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2200 3900 2200 4050
+$Comp
+L RESISTOR0402 R1
+U 1 1 5A46BC13
+P 2250 3700
+F 0 "R1" H 2200 3750 45  0000 L BNN
+F 1 "11k" H 2200 3600 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 2250 3850 20  0001 C CNN
+F 3 "http://www.yageo.com/documents/recent/Yageo%20LR_CFR_2013.pdf" H 2250 3700 60  0001 C CNN
+	1    2250 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR09
+U 1 1 5A46BC78
+P 2450 3700
+F 0 "#PWR09" H 2450 3450 50  0001 C CNN
+F 1 "GND" H 2450 3550 50  0000 C CNN
+F 2 "" H 2450 3700 50  0001 C CNN
+F 3 "" H 2450 3700 50  0001 C CNN
+	1    2450 3700
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2050 4300 2200 4300
+Wire Wire Line
+	2200 4300 2200 4150
+Wire Wire Line
+	2200 4150 3250 4150
+Wire Wire Line
+	2200 4050 3250 4050
+$Comp
+L RESISTOR0402 R3
+U 1 1 5A46CB43
+P 2850 4600
+F 0 "R3" H 2800 4650 45  0000 L BNN
+F 1 "100" H 2800 4500 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" H 2850 4750 20  0001 C CNN
+F 3 "" H 2850 4600 60  0001 C CNN
+F 4 " " H 2850 4800 60  0000 C CNN "Field4"
+	1    2850 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L LED D1
+U 1 1 5A46CB9F
+P 2850 4950
+F 0 "D1" H 2850 5050 50  0000 C CNN
+F 1 "LED" H 2850 4850 50  0000 C CNN
+F 2 "LEDs:LED_D5.0mm" H 2850 4950 50  0001 C CNN
+F 3 "http://www.lumex.com/content/files/ProductAttachment/SSL-LX5093ID.pdf" H 2850 4950 50  0001 C CNN
+F 4 "67-1105-ND" H 2850 4950 60  0001 C CNN "Part #"
+	1    2850 4950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR010
+U 1 1 5A46CC05
+P 2850 5100
+F 0 "#PWR010" H 2850 4850 50  0001 C CNN
+F 1 "GND" H 2850 4950 50  0000 C CNN
+F 2 "" H 2850 5100 50  0001 C CNN
+F 3 "" H 2850 5100 50  0001 C CNN
+	1    2850 5100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 4400 2850 4250
+Wire Wire Line
+	2850 4250 3250 4250
+Wire Wire Line
+	8350 3900 8350 3850
+Wire Wire Line
+	8450 3900 8450 2250
+Wire Wire Line
+	8450 2250 6200 2250
+Wire Wire Line
+	8350 2350 8350 3650
+Connection ~ 6100 2700
+Connection ~ 6200 2600
+NoConn ~ 3250 4450
+NoConn ~ 3250 3750
+NoConn ~ 3250 3650
+NoConn ~ 3250 3550
+NoConn ~ 3250 3450
+NoConn ~ 3250 3350
+NoConn ~ 4650 3250
+NoConn ~ 4650 3350
+NoConn ~ 4650 3450
+$Comp
+L GND #PWR011
+U 1 1 5A4713DB
+P 4750 3550
+F 0 "#PWR011" H 4750 3300 50  0001 C CNN
+F 1 "GND" H 4750 3400 50  0000 C CNN
+F 2 "" H 4750 3550 50  0001 C CNN
+F 3 "" H 4750 3550 50  0001 C CNN
+	1    4750 3550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR012
+U 1 1 5A471499
+P 3200 3150
+F 0 "#PWR012" H 3200 2900 50  0001 C CNN
+F 1 "GND" H 3200 3000 50  0000 C CNN
+F 2 "" H 3200 3150 50  0001 C CNN
+F 3 "" H 3200 3150 50  0001 C CNN
+	1    3200 3150
+	0    1    1    0   
+$EndComp
+NoConn ~ 4650 3850
+NoConn ~ 4650 3950
+NoConn ~ 4650 4350
+Wire Wire Line
+	4650 3550 4750 3550
+Wire Wire Line
+	3250 3150 3200 3150
+$Comp
+L GND #PWR013
+U 1 1 5A47510A
+P 6500 2800
+F 0 "#PWR013" H 6500 2550 50  0001 C CNN
+F 1 "GND" H 6500 2650 50  0000 C CNN
+F 2 "" H 6500 2800 50  0001 C CNN
+F 3 "" H 6500 2800 50  0001 C CNN
+	1    6500 2800
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR014
+U 1 1 5A475347
+P 4650 3150
+F 0 "#PWR014" H 4650 2900 50  0001 C CNN
+F 1 "GND" H 4650 3000 50  0000 C CNN
+F 2 "" H 4650 3150 50  0001 C CNN
+F 3 "" H 4650 3150 50  0001 C CNN
+	1    4650 3150
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4650 3050 4900 3050
+$Comp
+L GND #PWR015
+U 1 1 5A478DA6
+P 3250 3850
+F 0 "#PWR015" H 3250 3600 50  0001 C CNN
+F 1 "GND" H 3250 3700 50  0000 C CNN
+F 2 "" H 3250 3850 50  0001 C CNN
+F 3 "" H 3250 3850 50  0001 C CNN
+	1    3250 3850
+	0    1    1    0   
+$EndComp
+NoConn ~ 4650 5350
+$Comp
+L LED D2
+U 1 1 5A45B7E2
+P 3200 4950
+F 0 "D2" H 3200 5050 50  0000 C CNN
+F 1 "LED" H 3200 4850 50  0000 C CNN
+F 2 "LEDs:LED_D5.0mm" H 3200 4950 50  0001 C CNN
+F 3 "http://www.lumex.com/content/files/ProductAttachment/SSL-LX5093ID.pdf" H 3200 4950 50  0001 C CNN
+F 4 "67-1105-ND" H 3200 4950 60  0001 C CNN "Part #"
+	1    3200 4950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L LED D6
+U 1 1 5A45BE6E
+P 7300 3250
+F 0 "D6" H 7300 3350 50  0000 C CNN
+F 1 "LED" H 7300 3150 50  0000 C CNN
+F 2 "LEDs:LED_D5.0mm" H 7300 3250 50  0001 C CNN
+F 3 "http://www.lumex.com/content/files/ProductAttachment/SSL-LX5093ID.pdf" H 7300 3250 50  0001 C CNN
+F 4 "67-1105-ND" H 7300 3250 60  0001 C CNN "Part #"
+	1    7300 3250
+	-1   0    0    1   
+$EndComp
+$Comp
+L D D4
+U 1 1 5A45CBFB
+P 6600 4750
+F 0 "D4" H 6600 4850 50  0000 C CNN
+F 1 "D" H 6600 4650 50  0000 C CNN
+F 2 "Diodes_THT:D_DO-35_SOD27_P7.62mm_Horizontal" H 6600 4750 50  0001 C CNN
+F 3 "https://www.fairchildsemi.com/datasheets/1N/1N914.pdf" H 6600 4750 50  0001 C CNN
+F 4 "1N4148FS-ND" H 6600 4750 60  0001 C CNN "Part #"
+	1    6600 4750
+	0    1    1    0   
+$EndComp
+$Comp
+L D D5
+U 1 1 5A45CCC2
+P 6850 3650
+F 0 "D5" H 6850 3750 50  0000 C CNN
+F 1 "D" H 6850 3550 50  0000 C CNN
+F 2 "Diodes_THT:D_DO-35_SOD27_P7.62mm_Horizontal" H 6850 3650 50  0001 C CNN
+F 3 "https://www.fairchildsemi.com/datasheets/1N/1N914.pdf" H 6850 3650 50  0001 C CNN
+F 4 "1N4148FS-ND" H 6850 3650 60  0001 C CNN "Part #"
+	1    6850 3650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L +3.3V #PWR016
+U 1 1 5A4637BE
+P 3150 3950
+F 0 "#PWR016" H 3150 3800 50  0001 C CNN
+F 1 "+3.3V" H 3150 4090 50  0000 C CNN
+F 2 "" H 3150 3950 50  0001 C CNN
+F 3 "" H 3150 3950 50  0001 C CNN
+	1    3150 3950
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3150 3950 3250 3950
+$Comp
+L +3.3V #PWR017
+U 1 1 5A4638F6
+P 1650 3900
+F 0 "#PWR017" H 1650 3750 50  0001 C CNN
+F 1 "+3.3V" H 1650 4040 50  0000 C CNN
+F 2 "" H 1650 3900 50  0001 C CNN
+F 3 "" H 1650 3900 50  0001 C CNN
+	1    1650 3900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L +3.3V #PWR018
+U 1 1 5A46393A
+P 1650 4300
+F 0 "#PWR018" H 1650 4150 50  0001 C CNN
+F 1 "+3.3V" H 1650 4440 50  0000 C CNN
+F 2 "" H 1650 4300 50  0001 C CNN
+F 3 "" H 1650 4300 50  0001 C CNN
+	1    1650 4300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L +5V #PWR019
+U 1 1 5A46409D
+P 4900 3050
+F 0 "#PWR019" H 4900 2900 50  0001 C CNN
+F 1 "+5V" H 4900 3190 50  0000 C CNN
+F 2 "" H 4900 3050 50  0001 C CNN
+F 3 "" H 4900 3050 50  0001 C CNN
+	1    4900 3050
+	0    1    1    0   
+$EndComp
+$Comp
+L +5V #PWR020
+U 1 1 5A4640F9
+P 6400 2900
+F 0 "#PWR020" H 6400 2750 50  0001 C CNN
+F 1 "+5V" H 6400 3040 50  0000 C CNN
+F 2 "" H 6400 2900 50  0001 C CNN
+F 3 "" H 6400 2900 50  0001 C CNN
+	1    6400 2900
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6400 2900 6500 2900
+$Comp
+L +5V #PWR021
+U 1 1 5A4658D3
+P 4950 5350
+F 0 "#PWR021" H 4950 5200 50  0001 C CNN
+F 1 "+5V" H 4950 5490 50  0000 C CNN
+F 2 "" H 4950 5350 50  0001 C CNN
+F 3 "" H 4950 5350 50  0001 C CNN
+	1    4950 5350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5050 5200 5050 5350
+Connection ~ 5900 2600
+$Comp
+L PWR_FLAG #FLG022
+U 1 1 5A466CF9
+P 5900 2550
+F 0 "#FLG022" H 5900 2625 50  0001 C CNN
+F 1 "PWR_FLAG" H 5900 2700 50  0000 C CNN
+F 2 "" H 5900 2550 50  0001 C CNN
+F 3 "" H 5900 2550 50  0001 C CNN
+	1    5900 2550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 2550 5900 2600
+$Comp
+L PWR_FLAG #FLG023
+U 1 1 5A466F5E
+P 5900 2750
+F 0 "#FLG023" H 5900 2825 50  0001 C CNN
+F 1 "PWR_FLAG" H 5900 2900 50  0000 C CNN
+F 2 "" H 5900 2750 50  0001 C CNN
+F 3 "" H 5900 2750 50  0001 C CNN
+	1    5900 2750
+	-1   0    0    1   
+$EndComp
+Connection ~ 5900 2700
+Wire Wire Line
+	5900 2750 5900 2700
+Wire Wire Line
+	5600 5050 5650 5050
+Wire Wire Line
+	5900 5050 5850 5050
+Wire Wire Line
+	5900 4150 5900 5050
+$Comp
+L Conn_01x03 J4
+U 1 1 5A46C5AC
+P 5750 5250
+F 0 "J4" H 5750 5450 50  0000 C CNN
+F 1 "Conn_01x03" V 5850 5250 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 5750 5250 50  0001 C CNN
+F 3 "" H 5750 5250 50  0001 C CNN
+	1    5750 5250
+	0    1    1    0   
+$EndComp
+$Comp
+L Conn_01x02 J5
+U 1 1 5A46D2EC
+P 8350 4100
+F 0 "J5" H 8350 4200 50  0000 C CNN
+F 1 "Conn_01x02" H 8350 3900 50  0000 C CNN
+F 2 "custom:NC6-P108-02" H 8350 4100 50  0001 C CNN
+F 3 "" H 8350 4100 50  0001 C CNN
+	1    8350 4100
+	0    -1   1    0   
+$EndComp
+$Comp
+L Conn_01x02 J3
+U 1 1 5A46D37D
+P 6700 5250
+F 0 "J3" H 6700 5350 50  0000 C CNN
+F 1 "Conn_01x02" H 6700 5050 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 6700 5250 50  0001 C CNN
+F 3 "" H 6700 5250 50  0001 C CNN
+	1    6700 5250
+	0    1    1    0   
+$EndComp
+$Comp
+L LCD_Backpack U4
+U 1 1 5A470C1B
+P 4850 5700
+F 0 "U4" H 5250 5700 60  0000 C CNN
+F 1 "LCD_Backpack" H 4800 5450 60  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x05_Pitch2.54mm" H 4700 5950 60  0001 C CNN
+F 3 "" H 4700 5950 60  0001 C CNN
+	1    4850 5700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 2600 6500 2600
+Wire Wire Line
+	5750 2700 6500 2700
+Wire Wire Line
+	6100 2350 8350 2350
+Wire Wire Line
+	6200 2250 6200 2600
+Wire Wire Line
+	6100 2350 6100 2700
+Wire Wire Line
+	1650 3700 1650 3900
+Wire Wire Line
+	1650 4300 1650 4500
+$Comp
+L +3.3V #PWR?
+U 1 1 5A476C4E
+P 3250 3050
+F 0 "#PWR?" H 3250 2900 50  0001 C CNN
+F 1 "+3.3V" H 3250 3190 50  0000 C CNN
+F 2 "" H 3250 3050 50  0001 C CNN
+F 3 "" H 3250 3050 50  0001 C CNN
+	1    3250 3050
+	0    -1   -1   0   
+$EndComp
+$EndSCHEMATC

@@ -1,0 +1,30 @@
+Component,Description,Part,References,Value,Footprint,Quantity Per PCB,Datasheet,Part #,URL
+1,Diode,D,D3 D4 D5,D,,3,https://www.fairchildsemi.com/datasheets/1N/1N914.pdf,1N4148FS-ND,
+2,LED generic,LED,D1 D2 D6,LED,,3,http://www.lumex.com/content/files/ProductAttachment/SSL-LX5093ID.pdf,67-1105-ND,
+3,"Generic screw terminal, single row, 01x02",Screw_Terminal_01x02,J2,Conn_01x02,,1,,,
+4,"Generic connector, single row, 01x04",Conn_01x04,J3,Conn_01x04,,1,,,
+5,"40V Vce, 0.2A Ic, NPN, Small Signal Transistor, TO-92",2N3904,Q1,2N3904,TO-92_Molded_Narrow,1,https://www.fairchildsemi.com/datasheets/MM/MMBT3904.pdf,,
+6,Generic Resistor Package,RESISTOR0402,R3 R4 R8,100,0402,3,,,
+7,Generic Resistor Package,RESISTOR0402,R1 R2 R5 R7,10k,0402,4,http://www.yageo.com/documents/recent/Yageo%20LR_CFR_2013.pdf,,
+8,Generic Resistor Package,RESISTOR0402,R6,1k,0402,1,,,
+9,Potentiometer,POT,RV1,POT,,1,http://www.vishay.com/docs/51036/p16pa16.pdf,,
+10,"Push button switch, generic, symbol, four pins",SW_Push_Dual,SW1 SW2,SW_Push_Dual,,2,http://omronfs.omron.com/en_US/ecb/products/pdf/en-b3f.pdf,SW400-ND,
+11,,G5LE,U3,G5LE,,1,https://media.digikey.com/pdf/Data%20Sheets/Omron%20PDFs/G5LE-E_G.pdf,,
+12,LCD Backpack,LCD_Backpack,U4,LCD_Backpack,,1,,,https://www.adafruit.com/product/292
+13,,RAC01,U2,RAC01,,1,https://www.recom-power.com/pdf/Powerline-AC-DC/RAC01_02-SC.pdf,,
+14,,node_mcu1.0,U1,node_mcu1.0,,1,,,
+
+
+
+
+
+Component Groups:,14
+Component Count:,24
+Fitted Components:,24
+Number of PCBs:,1
+Total components:,24
+Schematic Version:,0
+Schematic Date:,2017-12-28
+BoM Date:,Thu 28 Dec 2017 18:33:16 EST
+Schematic Source:,/home/peter/Projects/sous-vide/sous-vide.sch
+KiCad Version:,Eeschema 4.0.7-e2-6376~58~ubuntu16.04.1
