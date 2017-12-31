@@ -3,9 +3,9 @@
   (general
     (links 47)
     (no_connects 0)
-    (area 104.550999 32.025 205.04762 107.435)
+    (area 105.924999 36.924999 201.075001 105.075001)
     (thickness 1.6)
-    (drawings 8)
+    (drawings 9)
     (tracks 121)
     (zones 0)
     (modules 25)
@@ -16,7 +16,7 @@
   (title_block
     (title "Peter Mitrano")
     (date 2017-12-29)
-    (rev 0.1)
+    (rev 0.2)
     (comment 1 "with pot mount")
   )
 
@@ -1167,6 +1167,9 @@
     (pad 1 np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
   )
 
+  (gr_text "Sous-Vide\n" (at 129 83) (layer B.SilkS)
+    (effects (font (size 3 3) (thickness 0.3) italic) (justify mirror))
+  )
   (gr_text "DANGER ZONE" (at 122 82) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3) italic))
   )
