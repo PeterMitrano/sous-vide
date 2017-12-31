@@ -3,7 +3,7 @@
 Arduino ESP has macros for D0-16 that map to the GPIO #
 
 D0 -> GPIO 16 (Red LED)
-D4 -> GPIO 4  (Blue LED on ESP)
+D4 -> GPIO 2  (Blue LED on ESP)
 
 ### Pins I've tested with LED output
 
