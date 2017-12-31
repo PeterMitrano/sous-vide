@@ -3,7 +3,7 @@
   (general
     (links 45)
     (no_connects 0)
-    (area 105.924999 36.924999 201.075001 105.075001)
+    (area 104.550999 32.025 205.04762 107.435)
     (thickness 1.6)
     (drawings 9)
     (tracks 111)
@@ -94,7 +94,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory /home/peter/Projects/sous-vide/v0.1))
+      (outputdirectory /home/peter/Projects/sous-vide/v0.2))
   )
 
   (net 0 "")
