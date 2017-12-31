@@ -419,12 +419,12 @@ $EndComp
 $Comp
 L Conn_01x02 J3
 U 1 1 5A46D37D
-P 7500 5350
-F 0 "J3" H 7500 5450 50  0000 C CNN
-F 1 "Conn_01x02" H 7500 5150 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 7500 5350 50  0001 C CNN
-F 3 "" H 7500 5350 50  0001 C CNN
-	1    7500 5350
+P 8050 5350
+F 0 "J3" H 8050 5450 50  0000 C CNN
+F 1 "Conn_01x02" H 8050 5150 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 8050 5350 50  0001 C CNN
+F 3 "" H 8050 5350 50  0001 C CNN
+	1    8050 5350
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -553,7 +553,7 @@ SW1
 Text Label 4250 3950 3    60   ~ 0
 SW2
 Wire Wire Line
-	6950 5450 7300 5450
+	6950 5450 7450 5450
 Connection ~ 7200 5450
 Wire Wire Line
 	5600 1400 6050 1400
@@ -601,8 +601,6 @@ Wire Wire Line
 	5200 3300 5350 3300
 Wire Wire Line
 	6650 4300 6650 5350
-Wire Wire Line
-	6650 5350 7300 5350
 Connection ~ 6150 5900
 Wire Wire Line
 	4450 5450 6650 5450
@@ -693,4 +691,31 @@ $EndComp
 NoConn ~ 5450 3300
 NoConn ~ 5550 3300
 NoConn ~ 5650 3300
+$Comp
+L C C1
+U 1 1 5A494F7C
+P 7600 5400
+F 0 "C1" H 7625 5500 50  0000 L CNN
+F 1 "C" H 7625 5300 50  0000 L CNN
+F 2 "Capacitors_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm" H 7638 5250 50  0001 C CNN
+F 3 "" H 7600 5400 50  0001 C CNN
+	1    7600 5400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7450 5250 7850 5250
+Wire Wire Line
+	7850 5250 7850 5350
+Wire Wire Line
+	7450 5550 7850 5550
+Wire Wire Line
+	7850 5550 7850 5450
+Wire Wire Line
+	7450 5450 7450 5550
+Connection ~ 7600 5550
+Wire Wire Line
+	6650 5350 7450 5350
+Wire Wire Line
+	7450 5350 7450 5250
+Connection ~ 7600 5250
 $EndSCHEMATC
