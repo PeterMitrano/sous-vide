@@ -1,32 +1,33 @@
 Component,Description,Part,References,Value,Footprint,Quantity Per PCB,Datasheet,Part #,Field8,Field4,Field7,Field6,Field5
-1,Diode,D,D1 D2 D4,D,D_DO-35_SOD27_P7.62mm_Horizontal,3,https://www.fairchildsemi.com/datasheets/1N/1N914.pdf,1N4148FS-ND,,,,,
-2,LED generic,LED,D3 D5 D6,LED,LED_D5.0mm,3,http://www.lumex.com/content/files/ProductAttachment/SSL-LX5093ID.pdf,67-1105-ND,,,,,
-3,"Generic connector, single row, 01x02",Conn_01x02,J1,Conn_01x02,NC6-P108-02,1,,,,,,,
-4,"Generic screw terminal, single row, 01x02",Screw_Terminal_01x02,J2,Conn_01x02,NC6-P108-02,1,,,,,,,
-5,"Generic connector, single row, 01x02",Conn_01x02,J3,Conn_01x02,Pin_Header_Straight_1x02_Pitch2.54mm,1,,,,,,,
-6,"40V Vce, 0.2A Ic, NPN, Small Signal Transistor, TO-92",2N3904,Q1,2N3904,TO-92_Molded_Narrow,1,https://www.fairchildsemi.com/datasheets/MM/MMBT3904.pdf,,,,,,
-7,Generic Resistor Package,RESISTOR0402,R1,110,R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal,1,,,,,,,
-8,Generic Resistor Package,RESISTOR0402,R2 R6,11k,R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal,2,,,,,,,
-9,Generic Resistor Package,RESISTOR0402,R3,1k,R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal,1,,,,,,,
-10,Generic Resistor Package,RESISTOR0402,R4 R5,41,R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal,2,,,,,,,
-11,"Push button switch, generic, symbol, four pins",SW_Push_Dual,SW1 SW2,SW_Push_Dual,SW_TH_Tactile_Omron_B3F-10xx,2,http://omronfs.omron.com/en_US/ecb/products/pdf/en-b3f.pdf,SW400-ND,,,,,
-12,,G5LE,U1,G5LE,Relay_SPDT_OMRON-G5LE-1,1,https://media.digikey.com/pdf/Data%20Sheets/Omron%20PDFs/G5LE-E_G.pdf,,,,,,
-13,,LCD_Backpack,U5,LCD_Backpack,Pin_Header_Straight_1x05_Pitch2.54mm,1,,,,,,,
-14,,P090S-04F20BR10K,U4,P090S-04F20BR10K,TRIM_P090S-04F20BR10K,1,P090S-04F20BR10K,,TT Electronics/BI,Good,None,0.40 USD,Res Conductive Plastic POT 10K Ohm 20% 0.03W 1(Elec)/1(Mech)Turn 6mm (11.4 X 12.65 X 23mm) Pin Bracket Mount/Through ...
-15,,RAC01,U2,RAC01,RAC01-05SC,1,https://www.recom-power.com/pdf/Powerline-AC-DC/RAC01_02-SC.pdf,,,,,,
-16,,node_mcu1.0,U3,node_mcu1.0,NodeMCU_1_0,1,,,,,,,
+1,Unpolarized capacitor,C,C1,C,C_Disc_D4.3mm_W1.9mm_P5.00mm,1,,,,,,,
+2,Diode,D,D1 D2 D4,D,D_DO-35_SOD27_P7.62mm_Horizontal,3,https://www.fairchildsemi.com/datasheets/1N/1N914.pdf,1N4148FS-ND,,,,,
+3,LED generic,LED,D3 D5 D6,LED,LED_D5.0mm,3,http://www.lumex.com/content/files/ProductAttachment/SSL-LX5093ID.pdf,67-1105-ND,,,,,
+4,"Generic connector, single row, 01x02",Conn_01x02,J1,Conn_01x02,NC6-P108-02,1,,,,,,,
+5,"Generic screw terminal, single row, 01x02",Screw_Terminal_01x02,J2,Conn_01x02,NC6-P108-02,1,,,,,,,
+6,"Generic connector, single row, 01x02",Conn_01x02,J3,Conn_01x02,Pin_Header_Straight_1x02_Pitch2.54mm,1,,,,,,,
+7,"40V Vce, 0.2A Ic, NPN, Small Signal Transistor, TO-92",2N3904,Q1,2N3904,TO-92_Molded_Narrow,1,https://www.fairchildsemi.com/datasheets/MM/MMBT3904.pdf,,,,,,
+8,Generic Resistor Package,RESISTOR0402,R7,1.1k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,1,,,,,,,
+9,Generic Resistor Package,RESISTOR0402,R1,110,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,1,,,,,,,
+10,Generic Resistor Package,RESISTOR0402,R2 R6,11k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,2,,,,,,,
+11,Generic Resistor Package,RESISTOR0402,R4 R5,43,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,2,,,,,,,
+12,"Push button switch, generic, symbol, four pins",SW_Push_Dual,SW1 SW2,SW_Push_Dual,SW_TH_Tactile_Omron_B3F-10xx,2,http://omronfs.omron.com/en_US/ecb/products/pdf/en-b3f.pdf,SW400-ND,,,,,
+13,,G5LE,U1,G5LE,Relay_SPDT_OMRON-G5LE-1,1,https://media.digikey.com/pdf/Data%20Sheets/Omron%20PDFs/G5LE-E_G.pdf,,,,,,
+14,,LCD_Backpack,U5,LCD_Backpack,Pin_Header_Straight_1x05_Pitch2.54mm,1,,,,,,,
+15,,P090S-04F20BR10K,U4,P090S,P090S-THT_MNT,1,P090S-04F20BR10K,,TT Electronics/BI,Good,None,0.40 USD,Res Conductive Plastic POT 10K Ohm 20% 0.03W 1(Elec)/1(Mech)Turn 6mm (11.4 X 12.65 X 23mm) Pin Bracket Mount/Through ...
+16,,RAC01,U2,RAC01,RAC01-05SC,1,https://www.recom-power.com/pdf/Powerline-AC-DC/RAC01_02-SC.pdf,,,,,,
+17,,node_mcu1.0,U3,node_mcu1.0,NodeMCU_1_0,1,,,,,,,
 
 
 
 
 
-Component Groups:,16
-Component Count:,23
-Fitted Components:,23
+Component Groups:,17
+Component Count:,24
+Fitted Components:,24
 Number of PCBs:,1
-Total components:,23
+Total components:,24
 Schematic Version:,0.2
 Schematic Date:,2017-12-28
-BoM Date:,Sun 31 Dec 2017 01:12:14 EST
+BoM Date:,Mon 01 Jan 2018 16:54:34 EST
 Schematic Source:,/home/peter/Projects/sous-vide/sous-vide.sch
 KiCad Version:,Eeschema 4.0.7-e2-6376~58~ubuntu16.04.1
