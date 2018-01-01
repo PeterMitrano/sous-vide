@@ -497,12 +497,12 @@ $EndComp
 $Comp
 L +5V #PWR017
 U 1 1 5A491092
-P 6050 1300
-F 0 "#PWR017" H 6050 1150 50  0001 C CNN
-F 1 "+5V" H 6050 1440 50  0000 C CNN
-F 2 "" H 6050 1300 50  0001 C CNN
-F 3 "" H 6050 1300 50  0001 C CNN
-	1    6050 1300
+P 6050 900
+F 0 "#PWR017" H 6050 750 50  0001 C CNN
+F 1 "+5V" H 6050 1040 50  0000 C CNN
+F 2 "" H 6050 900 50  0001 C CNN
+F 3 "" H 6050 900 50  0001 C CNN
+	1    6050 900 
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -540,13 +540,91 @@ Text Label 4250 3550 0    60   ~ 0
 SW1
 Text Label 4250 3950 3    60   ~ 0
 SW2
+$Comp
+L G5LE U1
+U 1 1 5A454255
+P 4950 1150
+F 0 "U1" H 4950 750 60  0000 C CNN
+F 1 "G5LE" H 4950 850 60  0000 C CNN
+F 2 "Relays_THT:Relay_SPDT_OMRON-G5LE-1" H 4950 1150 60  0001 C CNN
+F 3 "https://media.digikey.com/pdf/Data%20Sheets/Omron%20PDFs/G5LE-E_G.pdf" H 4950 1150 60  0001 C CNN
+	1    4950 1150
+	-1   0    0    -1  
+$EndComp
+Text Label 6550 3550 0    60   ~ 0
+RED_LED
+Text Label 6550 3900 0    60   ~ 0
+BLUE_LED
+Text Label 6650 5350 0    60   ~ 0
+THERMISTOR
+Text Label 6500 5300 1    60   ~ 0
+UESR_POT
+$Comp
+L node_mcu1.0 U3
+U 1 1 5A457536
+P 5400 4200
+F 0 "U3" H 5250 4050 60  0000 C CNN
+F 1 "node_mcu1.0" H 5250 4200 60  0000 C CNN
+F 2 "custom:NodeMCU_1_0" H 5150 4150 60  0001 C CNN
+F 3 "" H 5150 4150 60  0001 C CNN
+	1    5400 4200
+	1    0    0    -1  
+$EndComp
+NoConn ~ 5450 3300
+NoConn ~ 5550 3300
+NoConn ~ 5650 3300
+$Comp
+L C C1
+U 1 1 5A494F7C
+P 7600 5400
+F 0 "C1" H 7625 5500 50  0000 L CNN
+F 1 "200nF" H 7625 5300 50  0000 L CNN
+F 2 "Capacitors_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm" H 7638 5250 50  0001 C CNN
+F 3 "" H 7600 5400 50  0001 C CNN
+	1    7600 5400
+	1    0    0    -1  
+$EndComp
+$Comp
+L RESISTOR0402 R7
+U 1 1 5A496D58
+P 8100 5350
+F 0 "R7" H 8050 5400 45  0000 L BNN
+F 1 "1.1k" H 8050 5250 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" H 8100 5500 20  0001 C CNN
+F 3 "" H 8100 5350 60  0001 C CNN
+F 4 " " H 8100 5550 60  0000 C CNN "Field4"
+	1    8100 5350
+	1    0    0    1   
+$EndComp
+$Comp
+L Conn_01x02 J5
+U 1 1 5A4AC97D
+P 6600 1200
+F 0 "J5" H 6600 1300 50  0000 C CNN
+F 1 "Jumper" V 6700 1150 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 6600 1200 50  0001 C CNN
+F 3 "" H 6600 1200 50  0001 C CNN
+	1    6600 1200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Conn_01x02 J4
+U 1 1 5A4ACB3D
+P 5850 1200
+F 0 "J4" H 5850 1300 50  0000 C CNN
+F 1 "Jumper" H 6050 1150 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 5850 1200 50  0001 C CNN
+F 3 "" H 5850 1200 50  0001 C CNN
+	1    5850 1200
+	-1   0    0    1   
+$EndComp
 Wire Wire Line
 	6950 5450 7450 5450
 Connection ~ 7200 5450
 Wire Wire Line
-	5600 1400 6050 1400
+	5600 1400 6600 1400
 Wire Wire Line
-	6050 1300 6050 1450
+	6050 1200 6050 1450
 Wire Wire Line
 	5650 1850 6250 1850
 Wire Wire Line
@@ -631,29 +709,10 @@ Wire Wire Line
 	3500 1400 4350 1400
 Wire Wire Line
 	4000 1500 3500 1500
-$Comp
-L G5LE U1
-U 1 1 5A454255
-P 4950 1150
-F 0 "U1" H 4950 750 60  0000 C CNN
-F 1 "G5LE" H 4950 850 60  0000 C CNN
-F 2 "Relays_THT:Relay_SPDT_OMRON-G5LE-1" H 4950 1150 60  0001 C CNN
-F 3 "https://media.digikey.com/pdf/Data%20Sheets/Omron%20PDFs/G5LE-E_G.pdf" H 4950 1150 60  0001 C CNN
-	1    4950 1150
-	-1   0    0    -1  
-$EndComp
 Connection ~ 4000 2200
 Wire Wire Line
 	4200 2550 4350 2550
 Connection ~ 4200 2300
-Text Label 6550 3550 0    60   ~ 0
-RED_LED
-Text Label 6550 3900 0    60   ~ 0
-BLUE_LED
-Text Label 6650 5350 0    60   ~ 0
-THERMISTOR
-Text Label 6500 5300 1    60   ~ 0
-UESR_POT
 Wire Wire Line
 	5250 5100 5550 5100
 Connection ~ 5350 5100
@@ -665,31 +724,6 @@ Wire Wire Line
 	4250 4150 4250 3650
 Wire Wire Line
 	4250 3650 4450 3650
-$Comp
-L node_mcu1.0 U3
-U 1 1 5A457536
-P 5400 4200
-F 0 "U3" H 5250 4050 60  0000 C CNN
-F 1 "node_mcu1.0" H 5250 4200 60  0000 C CNN
-F 2 "custom:NodeMCU_1_0" H 5150 4150 60  0001 C CNN
-F 3 "" H 5150 4150 60  0001 C CNN
-	1    5400 4200
-	1    0    0    -1  
-$EndComp
-NoConn ~ 5450 3300
-NoConn ~ 5550 3300
-NoConn ~ 5650 3300
-$Comp
-L C C1
-U 1 1 5A494F7C
-P 7600 5400
-F 0 "C1" H 7625 5500 50  0000 L CNN
-F 1 "200nF" H 7625 5300 50  0000 L CNN
-F 2 "Capacitors_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm" H 7638 5250 50  0001 C CNN
-F 3 "" H 7600 5400 50  0001 C CNN
-	1    7600 5400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	7450 5250 7900 5250
 Wire Wire Line
@@ -706,20 +740,17 @@ Wire Wire Line
 Wire Wire Line
 	7450 5350 7450 5250
 Connection ~ 7600 5250
-$Comp
-L RESISTOR0402 R7
-U 1 1 5A496D58
-P 8100 5350
-F 0 "R7" H 8050 5400 45  0000 L BNN
-F 1 "1.1k" H 8050 5250 45  0000 L BNN
-F 2 "Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" H 8100 5500 20  0001 C CNN
-F 3 "" H 8100 5350 60  0001 C CNN
-F 4 " " H 8100 5550 60  0000 C CNN "Field4"
-	1    8100 5350
-	1    0    0    1   
-$EndComp
 Wire Wire Line
 	7900 5450 8650 5450
 Wire Wire Line
 	8300 5350 8650 5350
+Wire Wire Line
+	6700 1400 7200 1400
+Wire Wire Line
+	7200 1400 7200 2200
+Wire Wire Line
+	7200 2200 6450 2200
+Connection ~ 6450 2200
+Wire Wire Line
+	6050 900  6050 1100
 $EndSCHEMATC
