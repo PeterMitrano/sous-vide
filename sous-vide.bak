@@ -75,8 +75,8 @@ $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "sous-vide"
-Date "2017-12-28"
-Rev "0.2"
+Date "2018-01-01"
+Rev "0.3"
 Comp "peter mitrano"
 Comment1 ""
 Comment2 ""
@@ -123,7 +123,7 @@ L Screw_Terminal_01x02 J2
 U 1 1 5A4549FC
 P 3200 1450
 F 0 "J2" H 3200 1550 50  0000 C CNN
-F 1 "Conn_01x02" H 3150 1250 50  0000 C CNN
+F 1 "Power" H 3150 1250 50  0000 C CNN
 F 2 "custom:NC6-P108-02" H 3200 1450 50  0001 C CNN
 F 3 "" H 3200 1450 50  0001 C CNN
 	1    3200 1450
@@ -365,7 +365,7 @@ L Conn_01x02 J1
 U 1 1 5A46D2EC
 P 3250 2100
 F 0 "J1" H 3250 2200 50  0000 C CNN
-F 1 "Conn_01x02" H 3250 1900 50  0000 C CNN
+F 1 "Heater" H 3250 1900 50  0000 C CNN
 F 2 "custom:NC6-P108-02" H 3250 2100 50  0001 C CNN
 F 3 "" H 3250 2100 50  0001 C CNN
 	1    3250 2100
@@ -585,6 +585,46 @@ F 3 "" H 6400 2700 50  0001 C CNN
 	1    6400 2700
 	0    1    1    0   
 $EndComp
+$Comp
+L Fuse F1
+U 1 1 5A4B2D8E
+P 3850 1550
+F 0 "F1" V 3930 1550 50  0000 C CNN
+F 1 "Fuse" V 3775 1550 50  0000 C CNN
+F 2 "custom:Fuse_Holder_65600001009" V 3780 1550 50  0001 C CNN
+F 3 "" H 3850 1550 50  0001 C CNN
+	1    3850 1550
+	0    1    -1   0   
+$EndComp
+$Comp
+L C C2
+U 1 1 5A4B301F
+P 5500 1300
+F 0 "C2" H 5525 1400 50  0000 L CNN
+F 1 "330uF" H 5525 1200 50  0000 L CNN
+F 2 "Capacitors_THT:CP_Radial_D8.0mm_P3.50mm" H 5538 1150 50  0001 C CNN
+F 3 "" H 5500 1300 50  0001 C CNN
+	1    5500 1300
+	1    0    0    1   
+$EndComp
+$Comp
+L RESISTOR0402 R3
+U 1 1 5A4B1E55
+P 6700 2300
+F 0 "R3" H 6650 2350 45  0000 L BNN
+F 1 "500" H 6650 2200 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" H 6700 2450 20  0001 C CNN
+F 3 "" H 6700 2300 60  0001 C CNN
+F 4 " " H 6700 2500 60  0000 C CNN "Field4"
+	1    6700 2300
+	0    1    1    0   
+$EndComp
+Text Label 6700 3300 0    60   ~ 0
+Relay
+Text Label 5550 2500 2    60   ~ 0
++coil
+Text Label 5550 1800 2    60   ~ 0
+-coil
 Wire Wire Line
 	6950 5450 7450 5450
 Connection ~ 7200 5450
@@ -641,8 +681,6 @@ Wire Wire Line
 Wire Wire Line
 	3400 1450 3650 1450
 Wire Wire Line
-	3450 2000 4300 2000
-Wire Wire Line
 	5250 5100 5550 5100
 Connection ~ 5350 5100
 Connection ~ 5400 5100
@@ -683,28 +721,6 @@ Connection ~ 5750 2500
 Connection ~ 5750 1800
 Wire Wire Line
 	6900 1800 7050 1800
-$Comp
-L Fuse F1
-U 1 1 5A4B2D8E
-P 3850 1550
-F 0 "F1" V 3930 1550 50  0000 C CNN
-F 1 "Fuse" V 3775 1550 50  0000 C CNN
-F 2 "custom:Fuse_Holder_65600001009" V 3780 1550 50  0001 C CNN
-F 3 "" H 3850 1550 50  0001 C CNN
-	1    3850 1550
-	0    1    -1   0   
-$EndComp
-$Comp
-L C C2
-U 1 1 5A4B301F
-P 5500 1300
-F 0 "C2" H 5525 1400 50  0000 L CNN
-F 1 "330uF" H 5525 1200 50  0000 L CNN
-F 2 "Capacitors_THT:CP_Radial_D8.0mm_P3.50mm" H 5538 1150 50  0001 C CNN
-F 3 "" H 5500 1300 50  0001 C CNN
-	1    5500 1300
-	1    0    0    1   
-$EndComp
 Wire Wire Line
 	5500 1450 5350 1450
 Wire Wire Line
@@ -719,22 +735,6 @@ Wire Wire Line
 	4300 2200 3450 2200
 Wire Wire Line
 	3450 2200 3450 2100
-Wire Wire Line
-	3650 2000 3650 1550
-Connection ~ 3650 1550
-Connection ~ 3650 2000
-$Comp
-L RESISTOR0402 R3
-U 1 1 5A4B1E55
-P 6700 2300
-F 0 "R3" H 6650 2350 45  0000 L BNN
-F 1 "500" H 6650 2200 45  0000 L BNN
-F 2 "Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" H 6700 2450 20  0001 C CNN
-F 3 "" H 6700 2300 60  0001 C CNN
-F 4 " " H 6700 2500 60  0000 C CNN "Field4"
-	1    6700 2300
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	5550 1800 5550 2000
 Wire Notes Line
@@ -756,4 +756,12 @@ Wire Wire Line
 	3650 1450 3650 1200
 Wire Wire Line
 	3650 1200 4000 1200
+Connection ~ 3650 1550
+Wire Wire Line
+	4300 2000 3650 2000
+Wire Wire Line
+	3650 2000 3650 1550
+Wire Wire Line
+	3450 2000 3450 1450
+Connection ~ 3450 1450
 $EndSCHEMATC
