@@ -1,2 +1,2 @@
 all:
-	zip -v v0.2.zip -r v0.2/
+	zip -v v0.3.zip -r v0.3/

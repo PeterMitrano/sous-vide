@@ -1,4 +1,4 @@
-update=Fri 29 Dec 2017 22:52:46 EST
+update=Mon 01 Jan 2018 18:51:27 EST
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,16 +25,6 @@ version=1
 NetIExt=net
 [general]
 version=1
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [eeschema]
 version=1
 LibDir=/home/peter/.kicad-libraries;/home/peter/.kicad/libraries
@@ -108,3 +98,13 @@ LibName66=custom/g5le
 LibName67=custom/node_mcu1
 LibName68=custom/lcd_backpack
 LibName69=snapEDA/P090S-04F20BR10K
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=Pcbnew
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
