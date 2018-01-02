@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/peter/Projects/sous-vide/sous-vide.sch</source>
-    <date>Mon 01 Jan 2018 22:00:32 EST</date>
+    <date>Mon 01 Jan 2018 22:17:06 EST</date>
     <tool>Eeschema 4.0.7-e2-6376~58~ubuntu16.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -521,11 +521,11 @@
     </libpart>
   </libparts>
   <libraries>
-    <library logical="transistors">
-      <uri>/usr/share/kicad/library/transistors.lib</uri>
-    </library>
     <library logical="device">
       <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+    <library logical="transistors">
+      <uri>/usr/share/kicad/library/transistors.lib</uri>
     </library>
     <library logical="switches">
       <uri>/usr/share/kicad/library/switches.lib</uri>
