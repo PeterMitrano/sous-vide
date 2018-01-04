@@ -1,14 +1,14 @@
 #include <Wire.h>
 
 const unsigned int RED_LED = D0;
-const unsigned int BLUE_LED = D4;
-const unsigned int SW1 = D3;
-const unsigned int SW2 = D5;
-const unsigned int RELAY = D8;
-const unsigned int DAT = D7;
-const unsigned int CLK = D6;
 const unsigned int POT = D1;
 const unsigned int THRM = D2;
+const unsigned int SW1 = D3;
+const unsigned int BLUE_LED = D4;
+const unsigned int SW2 = D5;
+const unsigned int CLK = D6;
+const unsigned int DAT = D7;
+const unsigned int RELAY = D8;
 
 unsigned long t = 0;
 bool relay_state = false;
@@ -40,13 +40,7 @@ void loop() {
     Serial.println(thm);
 
   }
-  else {
-    digitalWrite(RED_LED, LOW);
-    digitalWrite(THRM, LOW);
-    digitalWrite(POT, LOW);
-  }
-
-  if (!digitalRead(SW2)) {
+  else if (!digitalRead(SW2)) {
     digitalWrite(THRM, LOW);
     digitalWrite(POT, HIGH);
     digitalWrite(BLUE_LED, HIGH);
@@ -56,15 +50,17 @@ void loop() {
     Serial.println(pot);
 
   }
-  else {
+  else if (digitalRead(SW1) && digitalRead(SW2)) {
+    // neither pressed
     digitalWrite(BLUE_LED, LOW);
+    digitalWrite(RED_LED, LOW);
     digitalWrite(THRM, LOW);
     digitalWrite(POT, LOW);
-  }
-
-  if (digitalRead(SW1) && digitalRead(SW2)) {
     Serial.print("no analog ");
     Serial.println(analogRead(A0));
+  }
+  else {
+    Serial.println("shouldn't be possible?");
   }
 
   Wire.beginTransmission(0x0);
