@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/peter/Projects/sous-vide/sous-vide.sch</source>
-    <date>Mon 01 Jan 2018 22:17:06 EST</date>
+    <date>Thu 04 Jan 2018 14:43:18 EST</date>
     <tool>Eeschema 4.0.7-e2-6376~58~ubuntu16.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -277,7 +277,7 @@
       <tstamp>5A4B301F</tstamp>
     </comp>
     <comp ref="R3">
-      <value>500</value>
+      <value>430</value>
       <footprint>Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal</footprint>
       <fields>
         <field name="Field4"> </field>
@@ -521,35 +521,35 @@
     </libpart>
   </libparts>
   <libraries>
-    <library logical="device">
-      <uri>/usr/share/kicad/library/device.lib</uri>
-    </library>
-    <library logical="transistors">
-      <uri>/usr/share/kicad/library/transistors.lib</uri>
-    </library>
     <library logical="switches">
       <uri>/usr/share/kicad/library/switches.lib</uri>
-    </library>
-    <library logical="conn">
-      <uri>/usr/share/kicad/library/conn.lib</uri>
-    </library>
-    <library logical="g5le">
-      <uri>/home/peter/.kicad/libraries/custom/g5le.lib</uri>
     </library>
     <library logical="SparkFun-Resistors">
       <uri>/home/peter/.kicad/libraries/SparkFun-KiCad-Libraries-master/Libraries/SparkFun-Resistors.lib</uri>
     </library>
+    <library logical="rac01">
+      <uri>/home/peter/.kicad/libraries/custom/rac01.lib</uri>
+    </library>
     <library logical="node_mcu1">
       <uri>/home/peter/.kicad/libraries/custom/node_mcu1.lib</uri>
     </library>
-    <library logical="rac01">
-      <uri>/home/peter/.kicad/libraries/custom/rac01.lib</uri>
+    <library logical="P090S-04F20BR10K">
+      <uri>/home/peter/.kicad/libraries/snapEDA/P090S-04F20BR10K.lib</uri>
     </library>
     <library logical="lcd_backpack">
       <uri>/home/peter/.kicad/libraries/custom/lcd_backpack.lib</uri>
     </library>
-    <library logical="P090S-04F20BR10K">
-      <uri>/home/peter/.kicad/libraries/snapEDA/P090S-04F20BR10K.lib</uri>
+    <library logical="transistors">
+      <uri>/usr/share/kicad/library/transistors.lib</uri>
+    </library>
+    <library logical="device">
+      <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+    <library logical="g5le">
+      <uri>/home/peter/.kicad/libraries/custom/g5le.lib</uri>
+    </library>
+    <library logical="conn">
+      <uri>/usr/share/kicad/library/conn.lib</uri>
     </library>
   </libraries>
   <nets>
