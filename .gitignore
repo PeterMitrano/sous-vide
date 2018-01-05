@@ -2,4 +2,13 @@
 *.zip
 *.png
 *.dae
+*.000
+*.bak
+*.bck
+*.kicad_pcb-bak
+*~
+_autosave-*
+*.tmp
+*.net
+.dsn
 shapes3D
