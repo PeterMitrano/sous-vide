@@ -1,3 +1,8 @@
+build
+
+workspace.xml
+tasks.xml
+
 *.swp
 *.zip
 *.png
