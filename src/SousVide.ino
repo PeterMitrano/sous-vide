@@ -1,18 +1,15 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <Adafruit_LiquidCrystal.h>
 
-const unsigned int RED_LED = D0;
-const unsigned int POT = D1;
-const unsigned int THRM = D2;
-const unsigned int SW1 = D3;
-const unsigned int BLUE_LED = D4;
-const unsigned int SW2 = D5;
-const unsigned int CLK = D6;
-const unsigned int DAT = D7;
-const unsigned int RELAY = D8;
+#include "sous_vide.h"
+#include "event_handler.h"
 
-unsigned long t = 0;
-bool relay_state = false;
+unsigned int global_state = CHANGE_TEMP;
+unsigned int setpoint_temp_f = 0u;
+unsigned long t = 0ul;
+Adafruit_LiquidCrystal lcd(0);
+EventHandler event_handler;
 
 void setup() {
   pinMode(RED_LED, OUTPUT);
@@ -24,57 +21,58 @@ void setup() {
   pinMode(POT, OUTPUT);
   pinMode(THRM, OUTPUT);
 
+  lcd.begin(16, 2);
+  lcd.setBacklight(HIGH);
+  lcd.setCursor(0, 1);
+
+
   Serial.begin(9600);
   Serial.println("Setup.");
 
+  // set initial time
   t = millis();
 }
 
+// Start in the set temp state.
+//
+// CHANGE_TEMP
+//  - turn potentiometer to set temperature
+//  - press SW1 to go to CHANGE_TIME
+//  - SW2 does nothing
+//  - turn pot to set time
+//
+// CHANGE_TIME
+//  - press SW1 to go to HEATING
+//  - press SW2 to go back to setting time
+//
+// HEATING
+//  - start count-down timer
+//  - SW1 does nothing
+//  - press SW2 to go to PAUSE
+//  - pot does nothing
+//
+// PAUSE
+//  - press SW1 to resume, go to HEATING
+//  - press SW2 to confirm cancel
+//  - pot does nothing
+//
+// FINISHED
+//  - if the timer finishes, turn off the heater
+//  - none of the controls do anything
 void loop() {
-  if (!digitalRead(SW1)) {
-    digitalWrite(THRM, HIGH);
-    digitalWrite(POT, LOW);
-    digitalWrite(RED_LED, HIGH);
-    unsigned int thm = analogRead(A0);
-    Serial.print("sw1 ");
-    Serial.print("thm: ");
-    Serial.println(thm);
+  unsigned int pot = analogRead(A0);
 
-  }
-  else if (!digitalRead(SW2)) {
-    digitalWrite(THRM, LOW);
-    digitalWrite(POT, HIGH);
-    digitalWrite(BLUE_LED, HIGH);
-    unsigned int pot = analogRead(A0);
-    Serial.print("sw2 ");
-    Serial.print("pot: ");
-    Serial.println(pot);
-
-  }
-  else if (digitalRead(SW1) && digitalRead(SW2)) {
-    // neither pressed
-    digitalWrite(BLUE_LED, LOW);
-    digitalWrite(RED_LED, LOW);
-    digitalWrite(THRM, LOW);
-    digitalWrite(POT, LOW);
-    Serial.print("no analog ");
-    Serial.println(analogRead(A0));
-  }
-  else {
-    Serial.println("shouldn't be possible?");
+  switch (global_state) {
+    case CHANGE_TEMP:
+      break;
+    case CHANGE_TIME:
+      break;
+    case HEATING:
+      break;
+    case FINISHED:
+    default:
+      digitalWrite(RELAY, 0);
+      break;
   }
 
-  Wire.beginTransmission(0x0);
-  Wire.write(0xAA);
-  Wire.endTransmission(true);
-
-  unsigned long now = millis();
-  if (now - t > 5000) {
-    t = now;
-    relay_state = !relay_state;
-  }
-
-  digitalWrite(RELAY, relay_state);
-
-  delay(100);
 }

@@ -27,7 +27,7 @@ PlatformioAutogen = ".pioenvs/"
 # Dirs in this list can be paths relative to this file, absolute
 # paths, or paths relative to the user (using ~/path/to/file).
 libDirs = [
-           "lib"
+           "./lib/Adafruit_LiquidCrystal/"
            ,"~/.platformio/packages/framework-arduinoespressif8266/libraries/"
            ,"~/.platformio/packages/framework-arduinoespressif8266/cores/esp8266"
            ,"~/.platformio/packages/framework-arduinoespressif8266/variants/nodemcu"
