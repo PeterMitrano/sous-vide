@@ -1,8 +1,5 @@
 build
 
-workspace.xml
-tasks.xml
-
 *.swp
 *.zip
 *.png
@@ -17,3 +14,7 @@ _autosave-*
 *.net
 .dsn
 shapes3D
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
