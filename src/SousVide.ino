@@ -15,9 +15,10 @@ struct Event {
     bool valid = false;
 };
 
-int sw1_c= 0;
-int sw2_c= 0;
 Event checkForEvent() {
+  static int sw1_c= 0;
+  static int sw2_c= 0;
+
   Event event;
   if (!digitalRead(SW1)) {
     sw1_c++;
@@ -54,14 +55,18 @@ double analogToTemp(unsigned int thermistor_value) {
  * @return temp in fahrenheit
  */
 double potToTemp(unsigned int potentiometer_value) {
-  return potentiometer_value;
+  constexpr static int minimum_temp = 100; // degrees F
+  constexpr static int maximum_temp = 170; // degrees F
+  return map(potentiometer_value, 417, 938, minimum_temp, maximum_temp);
 }
 
 /**
  * @return time in seconds
  */
 unsigned int potToTime(unsigned int potentiometer_value) {
-  return potentiometer_value;
+  constexpr static unsigned int minimum_time = 5 * 60; // X minutes
+  constexpr static unsigned int maximum_time = 4 * 60 * 60; // X hours
+  return map(potentiometer_value, 417, 938, minimum_time, maximum_time);
 }
 
 void control_heater(double current_temp) {
@@ -128,6 +133,7 @@ void loop() {
   digitalWrite(THRM, LOW);
   unsigned int potentiometer_value = analogRead(A0);
   double pot_as_temp = potToTemp(potentiometer_value);
+  Serial.println(potentiometer_value);
   digitalWrite(POT, LOW);
   digitalWrite(THRM, HIGH);
   unsigned int thermistor_value = analogRead(A0);
@@ -234,5 +240,5 @@ void loop() {
       break;
   }
 
-  delay(50);
+  delay(20);
 }

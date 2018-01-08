@@ -15,3 +15,7 @@ see sous-vide.sch
 see sous-vide.kicad_pcb
 
 Mains power is scary. I used this to calculate trace width/clearance: http://www.desmith.net/NMdS/Electronics/TraceWidth.html
+
+## Random Notes
+
+ADC values for pot range from 417 to 938
