@@ -39,15 +39,7 @@ flags = [
     ,'-x'
     ,'c++'
     ,'-ansi'
-
-    # Customize microcontroler and Arduino version
-    ,'-mmcu=atmega328p'
-    ,'-DF_CPU=16000000L'
-    ,'-DARDUINO_ARCH_AVR'
-    ,'-DARDUINO_AVR_DUEMILANOVE'
-    ,'-DARDUINO=106000'
-    # ,'-MMD -DUSB_VID=null'
-    # ,'-DUSB_PID=null'
+    ,'-std=c++11'
 ]
 
 

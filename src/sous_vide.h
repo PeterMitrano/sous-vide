@@ -17,6 +17,4 @@ const unsigned int FINISHED = 0;
 const unsigned int CHANGE_TEMP = 1;
 const unsigned int CHANGE_TIME = 2;
 const unsigned int HEATING = 3;
-
-void up_sw1_short_press();
-void down_sw2_short_press();
+const unsigned int PAUSED = 4;
