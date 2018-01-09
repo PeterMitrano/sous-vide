@@ -1318,6 +1318,11 @@
       (net 22 "Net-(J1-Pad1)"))
     (pad 2 thru_hole circle (at -4.7625 0 270) (size 2.5 2.5) (drill 1.016) (layers *.Cu *.Mask)
       (net 23 "Net-(J1-Pad2)"))
+    (model /home/peter/Projects/sous-vide/kicad_proj/custom.pretty/NC6-P108-02.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module custom:NC6-P108-02 (layer F.Cu) (tedit 5A4AC06D) (tstamp 5A4AC0A0)
@@ -1347,6 +1352,11 @@
       (net 23 "Net-(J1-Pad2)"))
     (pad 2 thru_hole circle (at -4.7625 0 90) (size 2.5 2.5) (drill 1.016) (layers *.Cu *.Mask)
       (net 35 "Net-(F1-Pad2)"))
+    (model /home/peter/Projects/sous-vide/kicad_proj/custom.pretty/NC6-P108-02.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Capacitors_THT:CP_Radial_D8.0mm_P3.50mm (layer F.Cu) (tedit 5A4AE8AE) (tstamp 5A4ADD86)
