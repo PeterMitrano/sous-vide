@@ -3,7 +3,7 @@
   (general
     (links 54)
     (no_connects 0)
-    (area 105.924999 34.924999 206.075001 105.075001)
+    (area 103.142857 33.674999 210.04762 106.685)
     (thickness 1.6)
     (drawings 106)
     (tracks 133)
@@ -371,6 +371,11 @@
       (net 1 GND))
     (pad 30 thru_hole circle (at -11.43 -20.32) (size 1.7 1.7) (drill 1.25) (layers *.Cu *.Mask)
       (net 31 "Net-(U3-Pad30)"))
+    (model /home/peter/Projects/sous-vide/kicad_proj/custom.pretty/NodeMCU_1_0.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module custom:Fuse_Holder_65600001009 (layer F.Cu) (tedit 5A4ADB8E) (tstamp 5A4ADD98)
