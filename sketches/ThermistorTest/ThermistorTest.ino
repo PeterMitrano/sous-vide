@@ -5,7 +5,6 @@
 #define ADC_TOP 1023
 
 // Define thermistor parameters
-#define R_NTC 10000
 #define BETA 3977
 #define LNA -4.12858298874828
 
