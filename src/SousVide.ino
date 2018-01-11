@@ -52,7 +52,7 @@ unsigned int cooking_duration = 0, temp = 0;
 double duty_cycle = 0;
 
 // we don't use the latch pin
-Adafruit_LiquidCrystal lcd(DAT, CLK, 0);
+Adafruit_LiquidCrystal lcd(0);
 
 void setup() {
   pinMode(RED_LED, OUTPUT);
@@ -64,9 +64,11 @@ void setup() {
   pinMode(POT, OUTPUT);
   pinMode(THRM, OUTPUT);
 
+  Wire.begin(DAT, CLK);
   lcd.begin(16, 2);
+  lcd.clear();
   lcd.setBacklight(HIGH);
-  lcd.setCursor(0, 1);
+  lcd.setCursor(0, 0);
 
   Serial.begin(9600);
   Serial.println("Setup.");
@@ -108,9 +110,9 @@ void loop() {
     last_event_time = now;
     digitalWrite(POT, HIGH);
     digitalWrite(THRM, LOW);
-    unsigned int potentiometer_value = analogRead(A0);
+    static unsigned int potentiometer_value = 0;
+    potentiometer_value = 0.8 * potentiometer_value + 0.2 * analogRead(A0);
     double pot_as_temp = potToTemp(potentiometer_value);
-    Serial.println(potentiometer_value);
     digitalWrite(POT, LOW);
     digitalWrite(THRM, HIGH);
     unsigned int thermistor_value = analogRead(A0);
@@ -135,8 +137,8 @@ void loop() {
 
         lcd.setCursor(0, 0);
         lcd.print("Temp: ");
-        lcd.setCursor(1, 0);
-        lcd.print(String(pot_as_temp));
+        lcd.setCursor(0, 1);
+        lcd.print(String(pot_as_temp) + String("     "));
 
         Serial.print("change temp. ");
         Serial.print("temp = ");
@@ -159,11 +161,14 @@ void loop() {
         cooking_duration = potToTime(potentiometer_value);
         lcd.setCursor(0, 0);
         lcd.print("Time: ");
-        lcd.setCursor(1, 0);
-        lcd.print(String(cooking_duration));
-        Serial.print("change time. ");
-        Serial.print("time = ");
-        Serial.println(cooking_duration);
+        lcd.setCursor(0, 1);
+        {
+          String duration_string = String(cooking_duration/(60*60)) + ":" + String(cooking_duration/60%60) + String("     ");
+          lcd.print(duration_string);
+          Serial.print("change time. ");
+          Serial.print("time = ");
+          Serial.println(duration_string);
+        }
         break;
 
       case HEATING:
@@ -176,7 +181,7 @@ void loop() {
 
         lcd.setCursor(0, 0);
         lcd.print("status... ");
-        lcd.setCursor(1, 0);
+        lcd.setCursor(0, 1);
         lcd.print(String(current_temp));
         lcd.print("    ");
         lcd.print(String(millis() - start_cook_time));
@@ -254,9 +259,10 @@ double potToTemp(unsigned int potentiometer_value) {
  * @return time in seconds
  */
 unsigned int potToTime(unsigned int potentiometer_value) {
-  static constexpr unsigned int minimum_time = 5 * 60; // X minutes
-  static constexpr unsigned int maximum_time = 4 * 60 * 60; // X hours
-  return map(potentiometer_value, 417, 938, minimum_time, maximum_time);
+  static constexpr unsigned int minimum_time = 5; // X minutes
+  static constexpr unsigned int maximum_time = 4 * 60; // X hours
+  static constexpr unsigned int intervals = (maximum_time - minimum_time) / 5;
+  return (minimum_time + 5 * map(potentiometer_value, 420, 930, 0, intervals)) * 60;
 }
 
 /**
