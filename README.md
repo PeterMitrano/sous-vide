@@ -19,3 +19,9 @@ Mains power is scary. I used this to calculate trace width/clearance: http://www
 ## Random Notes
 
 ADC values for pot range from 417 to 938
+
+### Revision Notes
+
+ - hole size of screw terminals are too small. Should be 1.8542mm
+ - label on V+ and V- on heater are backwards (J1)
+ -  button pins are wrong

@@ -224,12 +224,21 @@ void loop() {
   }
 
   // Software PWM of relay
-  static unsigned long pwm_t0 = 0ul;
-  static constexpr double pwm_period_ms = 10000;
-  digitalWrite(RELAY, (now - pwm_t0 < duty_cycle * pwm_period_ms));
-  if (now - pwm_t0 > pwm_period_ms) {
-    pwm_t0 = now;
+  //static unsigned long pwm_t0 = 0ul;
+  //static constexpr double pwm_period_ms = 10000;
+  //digitalWrite(RELAY, (now - pwm_t0 < duty_cycle * pwm_period_ms));
+  //if (now - pwm_t0 > pwm_period_ms) {
+    //pwm_t0 = now;
+  //}
+  static unsigned long tt = millis();
+  static bool on = true;
+  if (millis() - tt > 1000) {
+    on = !on;
+    tt = millis();
   }
+  Serial.print("RELAY: ");
+  Serial.println(on);
+  digitalWrite(RELAY, on);
 }
 
 /**
