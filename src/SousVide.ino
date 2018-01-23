@@ -124,7 +124,7 @@ void loop() {
 
     switch (global_state) {
       case CHANGE_TEMP:
-        digitalWrite(RELAY, LOW);
+        //digitalWrite(RELAY, LOW);
         digitalWrite(BLUE_LED, LOW);
         digitalWrite(RED_LED, LOW);
 
@@ -146,7 +146,7 @@ void loop() {
         break;
 
       case CHANGE_TIME:
-        digitalWrite(RELAY, LOW);
+        //digitalWrite(RELAY, LOW);
         digitalWrite(BLUE_LED, LOW);
         digitalWrite(RED_LED, LOW);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
@@ -199,7 +199,7 @@ void loop() {
         break;
 
       case PAUSED:
-        digitalWrite(RELAY, LOW);
+        //digitalWrite(RELAY, LOW);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           Serial.println("going to heating.");
           global_state = HEATING;
@@ -218,7 +218,7 @@ void loop() {
       default:
         digitalWrite(BLUE_LED, LOW);
         digitalWrite(RED_LED, LOW);
-        digitalWrite(RELAY, LOW);
+        //digitalWrite(RELAY, LOW);
         break;
     }
   }
