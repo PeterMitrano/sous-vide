@@ -34,7 +34,7 @@ Event checkForEvent() {
 
 void setup() {
   pinMode(RED_LED, OUTPUT);
-  pinMode(BLUE_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
   pinMode(SW1, INPUT_PULLUP);
   pinMode(SW2, INPUT_PULLUP);
   pinMode(RELAY, OUTPUT);
@@ -76,10 +76,11 @@ void loop() {
     switch (global_state) {
       case CHANGE_TEMP:
         digitalWrite(RELAY, LOW);
-        digitalWrite(BLUE_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, LOW);
 
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
+          lcd.clear();
           global_state = CHANGE_TIME;
         }
 
@@ -99,13 +100,15 @@ void loop() {
 
       case CHANGE_TIME:
         digitalWrite(RELAY, LOW);
-        digitalWrite(BLUE_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, LOW);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
+          lcd.clear();
           global_state = HEATING;
           start_cook_time = millis();
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
+          lcd.clear();
           global_state = CHANGE_TEMP;
         }
 
@@ -134,9 +137,10 @@ void loop() {
         break;
 
       case HEATING:
-        digitalWrite(BLUE_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, HIGH);
         if (evt.valid && evt.type == EventType::SW2_PRESS) {
+          lcd.clear();
           global_state = PAUSED;
         }
 
@@ -150,8 +154,9 @@ void loop() {
         control_heater(current_temp);
 
         if (millis() - start_cook_time >= cooking_duration) {
-          digitalWrite(BLUE_LED, HIGH);
+          digitalWrite(GREEN_LED, HIGH);
           digitalWrite(RED_LED, LOW);
+          lcd.clear();
           global_state = FINISHED;
         }
 
@@ -162,15 +167,18 @@ void loop() {
 
       case PAUSED:
         digitalWrite(RELAY, LOW);
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(RED_LED, HIGH);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
+          lcd.clear();
           global_state = HEATING;
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
+          lcd.clear();
           global_state = FINISHED;
         }
 
         lcd.setCursor(0, 0);
-        lcd.clear();
         lcd.print("paused.");
 
 #ifdef DEBUG
@@ -184,7 +192,7 @@ void loop() {
 #endif
         // [[fallthrough]]
       default:
-        digitalWrite(BLUE_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, LOW);
         digitalWrite(RELAY, LOW);
         break;
