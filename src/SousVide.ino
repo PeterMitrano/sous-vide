@@ -1,19 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include <Adafruit_LiquidCrystal.h>
 
 #include "sous_vide.h"
-
-enum EventType {
-  SW1_PRESS,
-  SW2_PRESS,
-  NONE
-};
-
-struct Event {
-    EventType type = EventType::NONE;
-    bool valid = false;
-};
 
 Event checkForEvent() {
   static int sw1_c= 0;
@@ -24,7 +12,7 @@ Event checkForEvent() {
     sw1_c++;
   }
   else if (digitalRead(SW1)) {
-    if (sw1_c > 5) {
+    if (sw1_c > 1) {
       event.valid = true;
       event.type = SW1_PRESS;
     }
@@ -35,7 +23,7 @@ Event checkForEvent() {
     sw2_c++;
   }
   else if (digitalRead(SW2)) {
-    if (sw2_c > 5) {
+    if (sw2_c > 1) {
       event.valid = true;
       event.type = SW2_PRESS;
     }
@@ -43,16 +31,6 @@ Event checkForEvent() {
   }
   return event;
 }
-
-unsigned int global_state = CHANGE_TEMP;
-unsigned int setpoint_temp_f = 0u;
-unsigned long t = 0ul;
-unsigned long start_cook_time = 0ul;
-unsigned int cooking_duration = 0, temp = 0;
-double duty_cycle = 0;
-
-// we don't use the latch pin
-Adafruit_LiquidCrystal lcd(0);
 
 void setup() {
   pinMode(RED_LED, OUTPUT);
@@ -71,42 +49,15 @@ void setup() {
   lcd.setCursor(0, 0);
 
   Serial.begin(9600);
-  Serial.println("Setup.");
 
   // set initial cooking_duration
   t = millis();
 }
 
-// Start in the set temp state.
-//
-// CHANGE_TEMP
-//  - turn potentiometer to set temperature
-//  - press SW1 to go to CHANGE_TIME
-//  - SW2 does nothing
-//  - turn pot to set cooking_duration
-//
-// CHANGE_TIME
-//  - press SW1 to go to HEATING
-//  - press SW2 to go back to setting cooking_duration
-//
-// HEATING
-//  - start count-down timer
-//  - SW1 does nothing
-//  - press SW2 to go to PAUSE
-//  - pot does nothing
-//
-// PAUSE
-//  - press SW1 to resume, go to HEATING
-//  - press SW2 to confirm cancel
-//  - pot does nothing
-//
-// FINISHED
-//  - if the timer finishes, turn off the heater
-//  - none of the controls do anything
 void loop() {
   static unsigned long last_event_time = 0ul;
   unsigned long now = millis();
-  if (now - last_event_time > 20) {
+  if (now - last_event_time > 10) {
     last_event_time = now;
     digitalWrite(POT, HIGH);
     digitalWrite(THRM, LOW);
@@ -124,12 +75,11 @@ void loop() {
 
     switch (global_state) {
       case CHANGE_TEMP:
-        //digitalWrite(RELAY, LOW);
+        digitalWrite(RELAY, LOW);
         digitalWrite(BLUE_LED, LOW);
         digitalWrite(RED_LED, LOW);
 
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
-          Serial.println("going to CHANGE_TIME.");
           global_state = CHANGE_TIME;
         }
 
@@ -140,17 +90,18 @@ void loop() {
         lcd.setCursor(0, 1);
         lcd.print(String(pot_as_temp) + String("     "));
 
+#ifdef DEBUG
         Serial.print("change temp. ");
         Serial.print("temp = ");
         Serial.println(pot_as_temp);
+#endif
         break;
 
       case CHANGE_TIME:
-        //digitalWrite(RELAY, LOW);
+        digitalWrite(RELAY, LOW);
         digitalWrite(BLUE_LED, LOW);
         digitalWrite(RED_LED, LOW);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
-          Serial.println("going to HEATING.");
           global_state = HEATING;
           start_cook_time = millis();
         }
@@ -163,11 +114,22 @@ void loop() {
         lcd.print("Time: ");
         lcd.setCursor(0, 1);
         {
-          String duration_string = String(cooking_duration/(60*60)) + ":" + String(cooking_duration/60%60) + String("     ");
+          // pad minutes to two characters (ex: 05)
+          String min_str("00");
+          uint8_t minutes = cooking_duration/60%60;
+          if (minutes < 10) {
+            min_str[1] = String(minutes)[0];
+          }
+          else {
+            min_str = String(minutes);
+          }
+          String duration_string = String(cooking_duration/(60*60)) + ":" + min_str + String("       ");
           lcd.print(duration_string);
+#ifdef DEBUG
           Serial.print("change time. ");
           Serial.print("time = ");
           Serial.println(duration_string);
+#endif
         }
         break;
 
@@ -175,7 +137,6 @@ void loop() {
         digitalWrite(BLUE_LED, LOW);
         digitalWrite(RED_LED, HIGH);
         if (evt.valid && evt.type == EventType::SW2_PRESS) {
-          Serial.println("going to PAUSED.");
           global_state = PAUSED;
         }
 
@@ -189,56 +150,63 @@ void loop() {
         control_heater(current_temp);
 
         if (millis() - start_cook_time >= cooking_duration) {
-          Serial.println("going to finished.");
           digitalWrite(BLUE_LED, HIGH);
           digitalWrite(RED_LED, LOW);
           global_state = FINISHED;
         }
 
+#ifdef DEBUG
         Serial.println("heating.");
+#endif
         break;
 
       case PAUSED:
-        //digitalWrite(RELAY, LOW);
+        digitalWrite(RELAY, LOW);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
-          Serial.println("going to heating.");
           global_state = HEATING;
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
-          Serial.println("going to finished.");
           global_state = FINISHED;
         }
 
+        lcd.setCursor(0, 0);
+        lcd.clear();
+        lcd.print("paused.");
+
+#ifdef DEBUG
         Serial.println("paused.");
+#endif
         break;
 
       case FINISHED:
-        Serial.println("FINISHED.");
+#ifdef DEBUG
+        Serial.println("finished.");
+#endif
         // [[fallthrough]]
       default:
         digitalWrite(BLUE_LED, LOW);
         digitalWrite(RED_LED, LOW);
-        //digitalWrite(RELAY, LOW);
+        digitalWrite(RELAY, LOW);
         break;
     }
   }
 
   // Software PWM of relay
-  //static unsigned long pwm_t0 = 0ul;
-  //static constexpr double pwm_period_ms = 10000;
-  //digitalWrite(RELAY, (now - pwm_t0 < duty_cycle * pwm_period_ms));
-  //if (now - pwm_t0 > pwm_period_ms) {
-    //pwm_t0 = now;
-  //}
-  static unsigned long tt = millis();
-  static bool on = true;
-  if (millis() - tt > 1000) {
-    on = !on;
-    tt = millis();
+  static unsigned long pwm_t0 = 0ul;
+  static constexpr double pwm_period_ms = 10000;
+  digitalWrite(RELAY, (now - pwm_t0 < duty_cycle * pwm_period_ms));
+  if (now > pwm_t0 && now - pwm_t0 > pwm_period_ms) {
+    pwm_t0 = now;
   }
-  Serial.print("RELAY: ");
-  Serial.println(on);
-  digitalWrite(RELAY, on);
+  //static unsigned long tt = millis();
+  //static bool on = true;
+  //if (millis() - tt > 1000) {
+    //on = !on;
+    //tt = millis();
+  //}
+  //Serial.print("RELAY: ");
+  //Serial.println(on);
+  //digitalWrite(RELAY, on);
 }
 
 /**
@@ -261,7 +229,8 @@ double analogToTemp(unsigned int thermistor_value) {
 double potToTemp(unsigned int potentiometer_value) {
   static constexpr int minimum_temp = 100; // degrees F
   static constexpr int maximum_temp = 170; // degrees F
-  return map(potentiometer_value, 417, 938, minimum_temp, maximum_temp);
+  Serial.println(potentiometer_value);
+  return map(potentiometer_value, 3, 938, minimum_temp, maximum_temp);
 }
 
 /**
@@ -271,7 +240,8 @@ unsigned int potToTime(unsigned int potentiometer_value) {
   static constexpr unsigned int minimum_time = 5; // X minutes
   static constexpr unsigned int maximum_time = 4 * 60; // X hours
   static constexpr unsigned int intervals = (maximum_time - minimum_time) / 5;
-  return (minimum_time + 5 * map(potentiometer_value, 420, 930, 0, intervals)) * 60;
+  Serial.println(potentiometer_value);
+  return (minimum_time + 5 * map(potentiometer_value, 3, 930, 0, intervals)) * 60;
 }
 
 /**
@@ -299,5 +269,4 @@ void control_heater(double current_temp) {
   duty_cycle = fmax(fmin(duty_cycle, 1), 0);
 
   last_error = error;
-
 }
