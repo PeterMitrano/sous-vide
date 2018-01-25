@@ -23,11 +23,22 @@ const unsigned int PAUSED = 4;
 
 // global variables
 unsigned int setpoint_temp_fahrenheit_g = 0u;
-unsigned long start_cook_time_g = 0ul;
-unsigned int cooking_duration_g = 0;
+unsigned long start_cooking_time_sec_g = 0ul;
+unsigned int cooking_duration_sec_g = 0;
 double duty_cycle_g = 0;
 unsigned int state_g = CHANGE_TEMP;
 Adafruit_LiquidCrystal lcd(0);
+
+byte degree_char[8] = {
+	0b00110,
+	0b01001,
+	0b01001,
+	0b00110,
+	0b00000,
+	0b00000,
+	0b00000,
+	0b00000
+};
 
 // data structures
 enum EventType {
@@ -60,7 +71,7 @@ unsigned int potToTime(unsigned int potentiometer_value);
 /**
  * @ return time formatted as hh:mm
  */
-String formatTime(unsigned long t_millis);
+String formatTime(unsigned long t_s);
 
 /**
  * @ return time formatted as ###°F

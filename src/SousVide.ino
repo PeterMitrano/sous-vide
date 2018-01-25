@@ -6,12 +6,12 @@
 Event checkForEvent() {
   static int sw1_c= 0;
   static int sw2_c= 0;
-  static const int kDebounce = 4;
+  static const int kDebounce = 0;
 
   bool sw1_on = !digitalRead(SW1);
   bool sw2_on = !digitalRead(SW2);
 
-  if (sw1_on && sw1_c < kDebounce) {
+  if (sw1_on && sw1_c <= kDebounce) {
     sw1_c++;
   }
   else if (!sw1_on) {
@@ -19,12 +19,13 @@ Event checkForEvent() {
       Event sw1_event;
       sw1_event.valid = true;
       sw1_event.type = SW1_PRESS;
+      sw1_c = 0;
       return sw1_event;
     }
     sw1_c = 0;
   }
 
-  if (sw2_on && sw2_c < kDebounce) {
+  if (sw2_on && sw2_c <= kDebounce) {
     sw2_c++;
   }
   else if (!sw2_on) {
@@ -32,6 +33,7 @@ Event checkForEvent() {
       Event sw2_event;
       sw2_event.valid = true;
       sw2_event.type = SW2_PRESS;
+      sw2_c = 0;
       return sw2_event;
     }
     sw2_c = 0;
@@ -55,6 +57,7 @@ void setup() {
   lcd.clear();
   lcd.setBacklight(HIGH);
   lcd.setCursor(0, 0);
+  lcd.createChar(0, degree_char);
 
   Serial.begin(9600);
 }
@@ -62,7 +65,7 @@ void setup() {
 void loop() {
   static unsigned long last_event_time = 0ul;
   unsigned long now = millis();
-  if (now - last_event_time > 5) {
+  if (now - last_event_time > 50) {
     last_event_time = now;
     digitalWrite(POT, HIGH);
     digitalWrite(THRM, LOW);
@@ -95,6 +98,7 @@ void loop() {
         lcd.print("Temp: ");
         lcd.setCursor(0, 1);
         lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
+        lcd.write(0);
 
 #ifdef DEBUG
         Serial.print("change temp. ");
@@ -110,22 +114,22 @@ void loop() {
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           lcd.clear();
           state_g = HEATING;
-          start_cook_time_g = millis();
+          start_cooking_time_sec_g = millis();
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
           lcd.clear();
           state_g = CHANGE_TEMP;
         }
 
-        cooking_duration_g = potToTime(potentiometer_value);
+        cooking_duration_sec_g = potToTime(potentiometer_value);
         lcd.setCursor(0, 0);
         lcd.print("Time: ");
         lcd.setCursor(0, 1);
-        lcd.print(formatTime(cooking_duration_g));
+        lcd.print(formatTime(cooking_duration_sec_g));
 #ifdef DEBUG
         Serial.print("change time. ");
         Serial.print("time = ");
-        Serial.println(formatTime(cooking_duration_g));
+        Serial.println(formatTime(cooking_duration_sec_g));
 #endif
         break;
 
@@ -141,16 +145,17 @@ void loop() {
         lcd.print("status... ");
         lcd.setCursor(0, 1);
         lcd.print(formatTemp(current_temp));
+        lcd.write(0);
         lcd.print("    ");
-        lcd.print(formatTime(cooking_duration_g - (now - start_cook_time_g)));
+        lcd.print(formatTime(cooking_duration_sec_g - (now/1000 - start_cooking_time_sec_g)));
 
         control_heater(current_temp);
 
-        if (millis() - start_cook_time_g >= cooking_duration_g) {
+        if (millis() - start_cooking_time_sec_g >= cooking_duration_sec_g) {
           digitalWrite(GREEN_LED, HIGH);
           digitalWrite(RED_LED, LOW);
           lcd.clear();
-          state_g = FINISHED;
+          state_g = CHANGE_TEMP; // FIXME: change back to FINISHED
         }
 
 #ifdef DEBUG
@@ -188,6 +193,8 @@ void loop() {
         break;
 
       case FINISHED:
+        lcd.setCursor(0, 0);
+        lcd.print("finished.");
 #ifdef DEBUG
         Serial.println("finished.");
 #endif
@@ -199,16 +206,6 @@ void loop() {
         break;
     }
   }
-
-  //static unsigned long tt = millis();
-  //static bool on = true;
-  //if (millis() - tt > 1000) {
-    //on = !on;
-    //tt = millis();
-  //}
-  //Serial.print("RELAY: ");
-  //Serial.println(on);
-  //digitalWrite(RELAY, on);
 }
 
 double analogToTemp(unsigned int thermistor_value) {
@@ -225,21 +222,19 @@ double analogToTemp(unsigned int thermistor_value) {
 double potToTemp(unsigned int potentiometer_value) {
   static constexpr int minimum_temp = 100; // degrees F
   static constexpr int maximum_temp = 170; // degrees F
-  Serial.println(potentiometer_value);
   return map(potentiometer_value, 3, 938, minimum_temp, maximum_temp);
 }
 
 unsigned int potToTime(unsigned int potentiometer_value) {
-  static constexpr unsigned int minimum_time = 5; // X minutes
-  static constexpr unsigned int maximum_time = 4 * 60; // X hours
+  static constexpr unsigned int minimum_time = 30; // X minutes
+  static constexpr unsigned int maximum_time = 5 * 60; // X hours
   static constexpr unsigned int intervals = (maximum_time - minimum_time) / 5;
-  Serial.println(potentiometer_value);
   return (minimum_time + 5 * map(potentiometer_value, 3, 930, 0, intervals)) * 60;
 }
 
-String formatTime(unsigned long t_millis) {
-  unsigned long min = t_millis / 60000;
-  unsigned long h = min / 60;
+String formatTime(unsigned long t_s) {
+  unsigned long min = (t_s / 60) % 60;
+  unsigned long h = t_s / 3600;
   String hr_str("00");
   if (h < 10) {
     hr_str[1] = String(h)[0];
@@ -249,11 +244,11 @@ String formatTime(unsigned long t_millis) {
   }
 
   String min_str("00");
-  if (h < 10) {
-    min_str[1] = String(h)[0];
+  if (min < 10) {
+    min_str[1] = String(min)[0];
   }
   else {
-    min_str = String(h);
+    min_str = String(min);
   }
   return hr_str + String(":") + min_str;
 }
