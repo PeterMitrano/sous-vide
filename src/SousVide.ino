@@ -6,30 +6,38 @@
 Event checkForEvent() {
   static int sw1_c= 0;
   static int sw2_c= 0;
+  static const int kDebounce = 4;
 
-  Event event;
-  if (!digitalRead(SW1)) {
+  bool sw1_on = !digitalRead(SW1);
+  bool sw2_on = !digitalRead(SW2);
+
+  if (sw1_on && sw1_c < kDebounce) {
     sw1_c++;
   }
-  else if (digitalRead(SW1)) {
-    if (sw1_c > 1) {
-      event.valid = true;
-      event.type = SW1_PRESS;
+  else if (!sw1_on) {
+    if (sw1_c > kDebounce) {
+      Event sw1_event;
+      sw1_event.valid = true;
+      sw1_event.type = SW1_PRESS;
+      return sw1_event;
     }
     sw1_c = 0;
   }
 
-  if (!digitalRead(SW2)) {
+  if (sw2_on && sw2_c < kDebounce) {
     sw2_c++;
   }
-  else if (digitalRead(SW2)) {
-    if (sw2_c > 1) {
-      event.valid = true;
-      event.type = SW2_PRESS;
+  else if (!sw2_on) {
+    if (sw2_c > kDebounce) {
+      Event sw2_event;
+      sw2_event.valid = true;
+      sw2_event.type = SW2_PRESS;
+      return sw2_event;
     }
     sw2_c = 0;
   }
-  return event;
+
+  return Event();
 }
 
 void setup() {
@@ -49,15 +57,12 @@ void setup() {
   lcd.setCursor(0, 0);
 
   Serial.begin(9600);
-
-  // set initial cooking_duration
-  t = millis();
 }
 
 void loop() {
   static unsigned long last_event_time = 0ul;
   unsigned long now = millis();
-  if (now - last_event_time > 10) {
+  if (now - last_event_time > 5) {
     last_event_time = now;
     digitalWrite(POT, HIGH);
     digitalWrite(THRM, LOW);
@@ -73,7 +78,7 @@ void loop() {
 
     Event evt = checkForEvent();
 
-    switch (global_state) {
+    switch (state_g) {
       case CHANGE_TEMP:
         digitalWrite(RELAY, LOW);
         digitalWrite(GREEN_LED, LOW);
@@ -81,15 +86,15 @@ void loop() {
 
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           lcd.clear();
-          global_state = CHANGE_TIME;
+          state_g = CHANGE_TIME;
         }
 
-        setpoint_temp_f = pot_as_temp;
+        setpoint_temp_fahrenheit_g = pot_as_temp;
 
         lcd.setCursor(0, 0);
         lcd.print("Temp: ");
         lcd.setCursor(0, 1);
-        lcd.print(String(pot_as_temp) + String("     "));
+        lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
 
 #ifdef DEBUG
         Serial.print("change temp. ");
@@ -104,36 +109,24 @@ void loop() {
         digitalWrite(RED_LED, LOW);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           lcd.clear();
-          global_state = HEATING;
-          start_cook_time = millis();
+          state_g = HEATING;
+          start_cook_time_g = millis();
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
           lcd.clear();
-          global_state = CHANGE_TEMP;
+          state_g = CHANGE_TEMP;
         }
 
-        cooking_duration = potToTime(potentiometer_value);
+        cooking_duration_g = potToTime(potentiometer_value);
         lcd.setCursor(0, 0);
         lcd.print("Time: ");
         lcd.setCursor(0, 1);
-        {
-          // pad minutes to two characters (ex: 05)
-          String min_str("00");
-          uint8_t minutes = cooking_duration/60%60;
-          if (minutes < 10) {
-            min_str[1] = String(minutes)[0];
-          }
-          else {
-            min_str = String(minutes);
-          }
-          String duration_string = String(cooking_duration/(60*60)) + ":" + min_str + String("       ");
-          lcd.print(duration_string);
+        lcd.print(formatTime(cooking_duration_g));
 #ifdef DEBUG
-          Serial.print("change time. ");
-          Serial.print("time = ");
-          Serial.println(duration_string);
+        Serial.print("change time. ");
+        Serial.print("time = ");
+        Serial.println(formatTime(cooking_duration_g));
 #endif
-        }
         break;
 
       case HEATING:
@@ -141,28 +134,36 @@ void loop() {
         digitalWrite(RED_LED, HIGH);
         if (evt.valid && evt.type == EventType::SW2_PRESS) {
           lcd.clear();
-          global_state = PAUSED;
+          state_g = PAUSED;
         }
 
         lcd.setCursor(0, 0);
         lcd.print("status... ");
         lcd.setCursor(0, 1);
-        lcd.print(String(current_temp));
+        lcd.print(formatTemp(current_temp));
         lcd.print("    ");
-        lcd.print(String(millis() - start_cook_time));
+        lcd.print(formatTime(cooking_duration_g - (now - start_cook_time_g)));
 
         control_heater(current_temp);
 
-        if (millis() - start_cook_time >= cooking_duration) {
+        if (millis() - start_cook_time_g >= cooking_duration_g) {
           digitalWrite(GREEN_LED, HIGH);
           digitalWrite(RED_LED, LOW);
           lcd.clear();
-          global_state = FINISHED;
+          state_g = FINISHED;
         }
 
 #ifdef DEBUG
         Serial.println("heating.");
 #endif
+
+        // Software PWM of relay
+        static unsigned long pwm_t0 = 0ul;
+        static constexpr double pwm_period_ms = 10000;
+        digitalWrite(RELAY, (now - pwm_t0) < (duty_cycle_g * pwm_period_ms));
+        if (now > pwm_t0 && (now - pwm_t0) > pwm_period_ms) {
+          pwm_t0 = now;
+        }
         break;
 
       case PAUSED:
@@ -171,11 +172,11 @@ void loop() {
         digitalWrite(RED_LED, HIGH);
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           lcd.clear();
-          global_state = HEATING;
+          state_g = HEATING;
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
           lcd.clear();
-          global_state = FINISHED;
+          state_g = FINISHED;
         }
 
         lcd.setCursor(0, 0);
@@ -199,13 +200,6 @@ void loop() {
     }
   }
 
-  // Software PWM of relay
-  static unsigned long pwm_t0 = 0ul;
-  static constexpr double pwm_period_ms = 10000;
-  digitalWrite(RELAY, (now - pwm_t0 < duty_cycle * pwm_period_ms));
-  if (now > pwm_t0 && now - pwm_t0 > pwm_period_ms) {
-    pwm_t0 = now;
-  }
   //static unsigned long tt = millis();
   //static bool on = true;
   //if (millis() - tt > 1000) {
@@ -217,9 +211,6 @@ void loop() {
   //digitalWrite(RELAY, on);
 }
 
-/**
- * @return temp in fahrenheit
- */
 double analogToTemp(unsigned int thermistor_value) {
   static constexpr int ADC_TOP = 1023;
   static constexpr int BETA = 3977;
@@ -231,9 +222,6 @@ double analogToTemp(unsigned int thermistor_value) {
   return temp;
 }
 
-/**
- * @return temp in fahrenheit
- */
 double potToTemp(unsigned int potentiometer_value) {
   static constexpr int minimum_temp = 100; // degrees F
   static constexpr int maximum_temp = 170; // degrees F
@@ -241,9 +229,6 @@ double potToTemp(unsigned int potentiometer_value) {
   return map(potentiometer_value, 3, 938, minimum_temp, maximum_temp);
 }
 
-/**
- * @return time in seconds
- */
 unsigned int potToTime(unsigned int potentiometer_value) {
   static constexpr unsigned int minimum_time = 5; // X minutes
   static constexpr unsigned int maximum_time = 4 * 60; // X hours
@@ -252,29 +237,56 @@ unsigned int potToTime(unsigned int potentiometer_value) {
   return (minimum_time + 5 * map(potentiometer_value, 3, 930, 0, intervals)) * 60;
 }
 
-/**
- * For a given desired teperature, there is a duty cycle that acheives it.
- * We should use a reasonable PWM period fast enough to minimize fluctuations.
- * PID will be used to guide the duty cycle.
- *
- */
+String formatTime(unsigned long t_millis) {
+  unsigned long min = t_millis / 60000;
+  unsigned long h = min / 60;
+  String hr_str("00");
+  if (h < 10) {
+    hr_str[1] = String(h)[0];
+  }
+  else {
+    hr_str = String(h);
+  }
+
+  String min_str("00");
+  if (h < 10) {
+    min_str[1] = String(h)[0];
+  }
+  else {
+    min_str = String(h);
+  }
+  return hr_str + String(":") + min_str;
+}
+
+String formatTemp(unsigned long temp_fahrenheit) {
+  String temp(temp_fahrenheit);
+  if (temp_fahrenheit < 10) {
+    temp = String("  ") + temp;
+  }
+  else if (temp_fahrenheit < 100) {
+    temp = String(" ") + temp;
+  }
+
+  return temp;
+}
+
 void control_heater(double current_temp) {
   static constexpr double kP = 0.0;
   static constexpr double kI = 0.0;
   static constexpr double kD = 0.0;
   static double integral = 0;
 
-  double error = setpoint_temp_f - current_temp;
+  double error = setpoint_temp_fahrenheit_g - current_temp;
 
   static double last_error = error;
 
   integral += error;
 
   double derivative = error - last_error;
-  duty_cycle = kP * error + kI * integral + kD * derivative;
+  duty_cycle_g = kP * error + kI * integral + kD * derivative;
 
   // enforce limit on duty cycle
-  duty_cycle = fmax(fmin(duty_cycle, 1), 0);
+  duty_cycle_g = fmax(fmin(duty_cycle_g, 1), 0);
 
   last_error = error;
 }

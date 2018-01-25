@@ -22,13 +22,11 @@ const unsigned int HEATING = 3;
 const unsigned int PAUSED = 4;
 
 // global variables
-unsigned int setpoint_temp_f = 0u;
-unsigned long t = 0ul;
-unsigned long start_cook_time = 0ul;
-unsigned int cooking_duration = 0;
-unsigned int temp = 0;
-double duty_cycle = 0;
-unsigned int global_state = CHANGE_TEMP;
+unsigned int setpoint_temp_fahrenheit_g = 0u;
+unsigned long start_cook_time_g = 0ul;
+unsigned int cooking_duration_g = 0;
+double duty_cycle_g = 0;
+unsigned int state_g = CHANGE_TEMP;
 Adafruit_LiquidCrystal lcd(0);
 
 // data structures
@@ -45,14 +43,6 @@ struct Event {
 
 
 /**
- * For a given desired teperature, there is a duty cycle that acheives it.
- * We should use a reasonable PWM period fast enough to minimize fluctuations.
- * PID will be used to guide the duty cycle.
- *
- */
-void control_heater(double current_temp);
-
-/**
  * @return temp in fahrenheit
  */
 double analogToTemp(unsigned int thermistor_value);
@@ -66,3 +56,21 @@ double potToTemp(unsigned int potentiometer_value);
  * @return time in seconds
  */
 unsigned int potToTime(unsigned int potentiometer_value);
+
+/**
+ * @ return time formatted as hh:mm
+ */
+String formatTime(unsigned long t_millis);
+
+/**
+ * @ return time formatted as ###°F
+ */
+String formatTemp(unsigned long temp_fahrenheit);
+
+/**
+ * For a given desired teperature, there is a duty cycle that acheives it.
+ * We should use a reasonable PWM period fast enough to minimize fluctuations.
+ * PID will be used to guide the duty cycle.
+ *
+ */
+void control_heater(double current_temp);
