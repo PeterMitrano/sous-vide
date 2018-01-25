@@ -64,9 +64,10 @@ void setup() {
 
 void loop() {
   static unsigned long last_event_time = 0ul;
-  unsigned long now = millis();
-  if (now - last_event_time > 50) {
-    last_event_time = now;
+  unsigned long now_ms = millis();
+  unsigned long now_s = now_ms / 1000;
+  if (now_ms - last_event_time > 50) {
+    last_event_time = now_ms;
     digitalWrite(POT, HIGH);
     digitalWrite(THRM, LOW);
     static unsigned int potentiometer_value = 0;
@@ -90,6 +91,7 @@ void loop() {
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           lcd.clear();
           state_g = CHANGE_TIME;
+          break;
         }
 
         setpoint_temp_fahrenheit_g = pot_as_temp;
@@ -98,7 +100,7 @@ void loop() {
         lcd.print("Temp: ");
         lcd.setCursor(0, 1);
         lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
-        lcd.write(0);
+        lcd.write((uint8_t)0);
 
 #ifdef DEBUG
         Serial.print("change temp. ");
@@ -114,11 +116,13 @@ void loop() {
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           lcd.clear();
           state_g = HEATING;
-          start_cooking_time_sec_g = millis();
+          start_cooking_time_sec_g = now_s;
+          break;
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
           lcd.clear();
           state_g = CHANGE_TEMP;
+          break;
         }
 
         cooking_duration_sec_g = potToTime(potentiometer_value);
@@ -139,6 +143,7 @@ void loop() {
         if (evt.valid && evt.type == EventType::SW2_PRESS) {
           lcd.clear();
           state_g = PAUSED;
+          break;
         }
 
         lcd.setCursor(0, 0);
@@ -147,15 +152,16 @@ void loop() {
         lcd.print(formatTemp(current_temp));
         lcd.write(0);
         lcd.print("    ");
-        lcd.print(formatTime(cooking_duration_sec_g - (now/1000 - start_cooking_time_sec_g)));
+        lcd.print(formatTime(cooking_duration_sec_g - (now_s - start_cooking_time_sec_g)));
 
         control_heater(current_temp);
 
-        if (millis() - start_cooking_time_sec_g >= cooking_duration_sec_g) {
+        if (now_s - start_cooking_time_sec_g >= cooking_duration_sec_g) {
           digitalWrite(GREEN_LED, HIGH);
           digitalWrite(RED_LED, LOW);
           lcd.clear();
           state_g = CHANGE_TEMP; // FIXME: change back to FINISHED
+          break;
         }
 
 #ifdef DEBUG
@@ -165,9 +171,9 @@ void loop() {
         // Software PWM of relay
         static unsigned long pwm_t0 = 0ul;
         static constexpr double pwm_period_ms = 10000;
-        digitalWrite(RELAY, (now - pwm_t0) < (duty_cycle_g * pwm_period_ms));
-        if (now > pwm_t0 && (now - pwm_t0) > pwm_period_ms) {
-          pwm_t0 = now;
+        digitalWrite(RELAY, (now_ms - pwm_t0) < (duty_cycle_g * pwm_period_ms));
+        if (now_ms > pwm_t0 && (now_ms - pwm_t0) > pwm_period_ms) {
+          pwm_t0 = now_ms;
         }
         break;
 
@@ -178,10 +184,12 @@ void loop() {
         if (evt.valid && evt.type == EventType::SW1_PRESS) {
           lcd.clear();
           state_g = HEATING;
+          break;
         }
         else if (evt.valid && evt.type == EventType::SW2_PRESS) {
           lcd.clear();
           state_g = FINISHED;
+          break;
         }
 
         lcd.setCursor(0, 0);
