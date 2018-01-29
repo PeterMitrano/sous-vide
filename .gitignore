@@ -1,6 +1,7 @@
 build
 
 *.swp
+*.ods#
 *.zip
 *.png
 *.dae

@@ -68,8 +68,8 @@ void loop() {
   unsigned long now_s = now_ms / 1000;
   if (now_ms - last_event_time > 50) {
     last_event_time = now_ms;
-    digitalWrite(POT, HIGH);
-    digitalWrite(THRM, LOW);
+    //digitalWrite(POT, HIGH);
+    //digitalWrite(THRM, LOW);
     static unsigned int potentiometer_value = 0;
     potentiometer_value = 0.8 * potentiometer_value + 0.2 * analogRead(A0);
     double pot_as_temp = potToTemp(potentiometer_value);
@@ -77,8 +77,8 @@ void loop() {
     digitalWrite(THRM, HIGH);
     unsigned int thermistor_value = analogRead(A0);
     double current_temp = analogToTemp(thermistor_value);
-    digitalWrite(POT, LOW);
-    digitalWrite(THRM, LOW);
+    //digitalWrite(POT, LOW);
+    //digitalWrite(THRM, LOW);
 
     Event evt = checkForEvent();
 
@@ -171,10 +171,10 @@ void loop() {
         // Software PWM of relay
         static unsigned long pwm_t0 = 0ul;
         static constexpr double pwm_period_ms = 10000;
-        digitalWrite(RELAY, (now_ms - pwm_t0) < (duty_cycle_g * pwm_period_ms));
-        if (now_ms > pwm_t0 && (now_ms - pwm_t0) > pwm_period_ms) {
+        if (now_ms > pwm_t0 && (now_ms - pwm_t0) >= pwm_period_ms) {
           pwm_t0 = now_ms;
         }
+        digitalWrite(RELAY, (now_ms - pwm_t0) <= (duty_cycle_g * pwm_period_ms));
         break;
 
       case PAUSED:
@@ -274,7 +274,7 @@ String formatTemp(unsigned long temp_fahrenheit) {
 }
 
 void control_heater(double current_temp) {
-  static constexpr double kP = 0.0;
+  static constexpr double kP = 1.0;
   static constexpr double kI = 0.0;
   static constexpr double kD = 0.0;
   static double integral = 0;
@@ -287,9 +287,15 @@ void control_heater(double current_temp) {
 
   double derivative = error - last_error;
   duty_cycle_g = kP * error + kI * integral + kD * derivative;
+  //Serial.print(error);
+  //Serial.print(" ");
+  //Serial.println(duty_cycle_g);
 
   // enforce limit on duty cycle
   duty_cycle_g = fmax(fmin(duty_cycle_g, 1), 0);
+
+  // FIXME: just for testing temp measurement
+  duty_cycle_g = 1;
 
   last_error = error;
 }
