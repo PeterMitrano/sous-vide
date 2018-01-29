@@ -31,10 +31,6 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:misc
-LIBS:nodemcu
-LIBS:sensors
-LIBS:NodeMCU_TEMPLATE
 LIBS:SparkFun-Aesthetics
 LIBS:SparkFun-Batteries
 LIBS:SparkFun-Boards
@@ -63,11 +59,6 @@ LIBS:SparkFun-Resistors
 LIBS:SparkFun-RF
 LIBS:SparkFun-Sensors
 LIBS:SparkFun-Switches
-LIBS:rac01
-LIBS:g5le
-LIBS:node_mcu1
-LIBS:lcd_backpack
-LIBS:P090S-04F20BR10K
 LIBS:sous-vide-cache
 EELAYER 25 0
 EELAYER END
@@ -376,7 +367,7 @@ L Conn_01x02 J3
 U 1 1 5A46D37D
 P 8850 5350
 F 0 "J3" H 8850 5450 50  0000 C CNN
-F 1 "Conn_01x02" H 8850 5150 50  0000 C CNN
+F 1 "Conn_01x02" H 9000 5150 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 8850 5350 50  0001 C CNN
 F 3 "" H 8850 5350 50  0001 C CNN
 	1    8850 5350
@@ -543,24 +534,24 @@ NoConn ~ 5650 3300
 $Comp
 L C C1
 U 1 1 5A494F7C
-P 7600 5400
-F 0 "C1" H 7625 5500 50  0000 L CNN
-F 1 "200nF" H 7625 5300 50  0000 L CNN
-F 2 "Capacitors_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm" H 7638 5250 50  0001 C CNN
-F 3 "" H 7600 5400 50  0001 C CNN
-	1    7600 5400
+P 8150 5400
+F 0 "C1" H 8175 5500 50  0000 L CNN
+F 1 "200nF" H 8175 5300 50  0000 L CNN
+F 2 "Capacitors_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm" H 8188 5250 50  0001 C CNN
+F 3 "" H 8150 5400 50  0001 C CNN
+	1    8150 5400
 	1    0    0    -1  
 $EndComp
 $Comp
 L RESISTOR0402 R7
 U 1 1 5A496D58
-P 8100 5350
-F 0 "R7" H 8050 5400 45  0000 L BNN
-F 1 "1.1k" H 8050 5250 45  0000 L BNN
-F 2 "Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" H 8100 5500 20  0001 C CNN
-F 3 "" H 8100 5350 60  0001 C CNN
-F 4 " " H 8100 5550 60  0000 C CNN "Field4"
-	1    8100 5350
+P 7600 5250
+F 0 "R7" H 7550 5300 45  0000 L BNN
+F 1 "1.1k" H 7550 5150 45  0000 L BNN
+F 2 "Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" H 7600 5400 20  0001 C CNN
+F 3 "" H 7600 5250 60  0001 C CNN
+F 4 " " H 7600 5450 60  0000 C CNN "Field4"
+	1    7600 5250
 	1    0    0    1   
 $EndComp
 $Comp
@@ -625,8 +616,6 @@ Text Label 5550 2500 2    60   ~ 0
 +coil
 Text Label 5550 1800 2    60   ~ 0
 -coil
-Wire Wire Line
-	6950 5450 7450 5450
 Connection ~ 7200 5450
 Wire Wire Line
 	6100 5900 6200 5900
@@ -692,24 +681,6 @@ Wire Wire Line
 Wire Wire Line
 	4250 3650 4450 3650
 Wire Wire Line
-	6650 5250 7900 5250
-Wire Wire Line
-	7900 5250 7900 5350
-Wire Wire Line
-	7450 5550 7900 5550
-Wire Wire Line
-	7900 5550 7900 5450
-Wire Wire Line
-	7450 5450 7450 5550
-Connection ~ 7600 5550
-Wire Wire Line
-	7450 5250 7450 5250
-Connection ~ 7600 5250
-Wire Wire Line
-	7900 5450 8650 5450
-Wire Wire Line
-	8300 5350 8650 5350
-Wire Wire Line
 	5750 2250 5750 2500
 Wire Wire Line
 	5550 2500 6300 2500
@@ -764,4 +735,32 @@ Wire Wire Line
 Wire Wire Line
 	3450 2000 3450 1450
 Connection ~ 3450 1450
+Wire Wire Line
+	6950 5450 7800 5450
+Wire Wire Line
+	6650 5250 7400 5250
+Wire Wire Line
+	7800 5250 8650 5250
+Wire Wire Line
+	7800 5450 7800 5250
+Wire Wire Line
+	8650 5250 8650 5350
+Connection ~ 8150 5250
+Wire Wire Line
+	8650 5450 8650 5550
+Wire Wire Line
+	8650 5550 8150 5550
+$Comp
+L GND #PWR?
+U 1 1 5A6ED1AF
+P 8150 5650
+F 0 "#PWR?" H 8150 5400 50  0001 C CNN
+F 1 "GND" H 8150 5500 50  0000 C CNN
+F 2 "" H 8150 5650 50  0001 C CNN
+F 3 "" H 8150 5650 50  0001 C CNN
+	1    8150 5650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8150 5550 8150 5650
 $EndSCHEMATC
