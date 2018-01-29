@@ -224,6 +224,8 @@ double analogToTemp(unsigned int thermistor_value) {
   double temp = (R_REF * thermistor_value) / (ADC_TOP - thermistor_value);
   temp = BETA / (log(temp) - LNA);
   temp = temp - 273.15;
+  // TODO: this is empirically derived
+  temp = exp((thermistor_value + 1220) / 382.77);
   return temp;
 }
 
@@ -287,15 +289,12 @@ void control_heater(double current_temp) {
 
   double derivative = error - last_error;
   duty_cycle_g = kP * error + kI * integral + kD * derivative;
-  //Serial.print(error);
-  //Serial.print(" ");
-  //Serial.println(duty_cycle_g);
+  Serial.print(error);
+  Serial.print(" ");
+  Serial.println(duty_cycle_g);
 
   // enforce limit on duty cycle
   duty_cycle_g = fmax(fmin(duty_cycle_g, 1), 0);
-
-  // FIXME: just for testing temp measurement
-  duty_cycle_g = 1;
 
   last_error = error;
 }
