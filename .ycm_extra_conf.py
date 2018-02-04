@@ -27,10 +27,13 @@ PlatformioAutogen = ".pioenvs/"
 # Dirs in this list can be paths relative to this file, absolute
 # paths, or paths relative to the user (using ~/path/to/file).
 libDirs = [
-           "./lib/Adafruit_LiquidCrystal/"
-           ,"~/.platformio/packages/framework-arduinoespressif8266/libraries/"
-           ,"~/.platformio/packages/framework-arduinoespressif8266/cores/esp8266"
-           ,"~/.platformio/packages/framework-arduinoespressif8266/variants/nodemcu"
+           "./lib/Adafruit_LiquidCrystal/",
+           "./lib/commanduino/",
+           "~/.platformio/packages/framework-arduinoespressif8266/libraries/",
+           "~/.platformio/packages/framework-arduinoespressif8266/cores/esp8266/",
+           "~/.platformio/packages/framework-arduinoespressif8266/variants/nodemcu/",
+           "~/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/5.4.1/",
+           "~/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/5.4.1/bits",
            ]
 
 flags = [

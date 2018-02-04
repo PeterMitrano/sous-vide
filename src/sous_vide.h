@@ -22,6 +22,7 @@ const unsigned int HEATING = 3;
 const unsigned int PAUSED = 4;
 
 // global variables
+unsigned int current_temp_g = 0;
 unsigned int setpoint_temp_fahrenheit_g = 0u;
 unsigned long start_cooking_time_sec_g = 0ul;
 unsigned int cooking_duration_sec_g = 0;
@@ -49,7 +50,6 @@ enum EventType {
 
 struct Event {
     EventType type = EventType::NONE;
-    bool valid = false;
 };
 
 
@@ -76,7 +76,7 @@ String formatTime(unsigned long t_s);
 /**
  * @ return time formatted as ###°F
  */
-String formatTemp(unsigned long temp_fahrenheit);
+String formatTemp(unsigned int temp_fahrenheit);
 
 /**
  * For a given desired teperature, there is a duty cycle that acheives it.
@@ -84,4 +84,4 @@ String formatTemp(unsigned long temp_fahrenheit);
  * PID will be used to guide the duty cycle.
  *
  */
-void control_heater(double current_temp);
+void control_heater();

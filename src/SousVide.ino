@@ -1,12 +1,13 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <queue>
 
 #include "sous_vide.h"
 
 Event checkForEvent() {
   static int sw1_c= 0;
   static int sw2_c= 0;
-  static const int kDebounce = 0;
+  static const int kDebounce = 4;
 
   bool sw1_on = !digitalRead(SW1);
   bool sw2_on = !digitalRead(SW2);
@@ -17,7 +18,6 @@ Event checkForEvent() {
   else if (!sw1_on) {
     if (sw1_c > kDebounce) {
       Event sw1_event;
-      sw1_event.valid = true;
       sw1_event.type = SW1_PRESS;
       sw1_c = 0;
       return sw1_event;
@@ -31,7 +31,6 @@ Event checkForEvent() {
   else if (!sw2_on) {
     if (sw2_c > kDebounce) {
       Event sw2_event;
-      sw2_event.valid = true;
       sw2_event.type = SW2_PRESS;
       sw2_c = 0;
       return sw2_event;
@@ -64,148 +63,150 @@ void setup() {
 
 void loop() {
   static unsigned long last_event_time = 0ul;
+  static unsigned long last_print_time = 0ul;
   unsigned long now_ms = millis();
   unsigned long now_s = now_ms / 1000;
-  if (now_ms - last_event_time > 50) {
+
+  // default constructed to invalid event
+  static std::queue<Event> event_queue;
+
+  // fastest loop for reading thermistor, controlling heater, and button checking
+  if (now_ms - last_event_time > 5) {
     last_event_time = now_ms;
-    //digitalWrite(POT, HIGH);
-    //digitalWrite(THRM, LOW);
-    static unsigned int potentiometer_value = 0;
-    potentiometer_value = 0.8 * potentiometer_value + 0.2 * analogRead(A0);
-    double pot_as_temp = potToTemp(potentiometer_value);
-    digitalWrite(POT, LOW);
-    digitalWrite(THRM, HIGH);
-    unsigned int thermistor_value = analogRead(A0);
-    double current_temp = analogToTemp(thermistor_value);
-    //digitalWrite(POT, LOW);
-    //digitalWrite(THRM, LOW);
 
     Event evt = checkForEvent();
+    if (event_queue.empty() && evt.type != EventType::NONE) {
+      event_queue.push(evt);
+    }
+
+    if (state_g == HEATING) {
+      digitalWrite(POT, LOW);
+      digitalWrite(THRM, HIGH);
+      unsigned int thermistor_value = analogRead(A0);
+      current_temp_g = analogToTemp(thermistor_value);
+
+      control_heater();
+
+      if (now_s - start_cooking_time_sec_g >= cooking_duration_sec_g) {
+        digitalWrite(GREEN_LED, HIGH);
+        digitalWrite(RED_LED, LOW);
+        lcd.clear();
+        state_g = CHANGE_TEMP; // FIXME: change back to FINISHED
+      }
+    }
+  }
+  // run the display at a mucher slower rate
+  if (now_ms - last_print_time > 100) {
+    last_print_time = now_ms;
+    Event latest_evt;
+    if (!event_queue.empty()) {
+      latest_evt = event_queue.front();
+      event_queue.pop();
+    }
 
     switch (state_g) {
       case CHANGE_TEMP:
-        digitalWrite(RELAY, LOW);
-        digitalWrite(GREEN_LED, LOW);
-        digitalWrite(RED_LED, LOW);
+        {
+          digitalWrite(RELAY, LOW);
+          digitalWrite(GREEN_LED, LOW);
+          digitalWrite(RED_LED, LOW);
 
-        if (evt.valid && evt.type == EventType::SW1_PRESS) {
-          lcd.clear();
-          state_g = CHANGE_TIME;
+          digitalWrite(POT, HIGH);
+          digitalWrite(THRM, LOW);
+          static unsigned int potentiometer_value = 0;
+          potentiometer_value = 0.8 * potentiometer_value + 0.2 * analogRead(A0);
+          double pot_as_temp = potToTemp(potentiometer_value);
+
+          if (latest_evt.type == EventType::SW1_PRESS) {
+            lcd.clear();
+            state_g = CHANGE_TIME;
+            break;
+          }
+
+          setpoint_temp_fahrenheit_g = pot_as_temp;
+
+          lcd.setCursor(0, 0);
+          lcd.print("Temp: ");
+          lcd.setCursor(0, 1);
+          lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
+          lcd.write((uint8_t)0);
           break;
         }
-
-        setpoint_temp_fahrenheit_g = pot_as_temp;
-
-        lcd.setCursor(0, 0);
-        lcd.print("Temp: ");
-        lcd.setCursor(0, 1);
-        lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
-        lcd.write((uint8_t)0);
-
-#ifdef DEBUG
-        Serial.print("change temp. ");
-        Serial.print("temp = ");
-        Serial.println(pot_as_temp);
-#endif
-        break;
 
       case CHANGE_TIME:
-        digitalWrite(RELAY, LOW);
-        digitalWrite(GREEN_LED, LOW);
-        digitalWrite(RED_LED, LOW);
-        if (evt.valid && evt.type == EventType::SW1_PRESS) {
-          lcd.clear();
-          state_g = HEATING;
-          start_cooking_time_sec_g = now_s;
-          break;
-        }
-        else if (evt.valid && evt.type == EventType::SW2_PRESS) {
-          lcd.clear();
-          state_g = CHANGE_TEMP;
-          break;
-        }
+        {
+          digitalWrite(RELAY, LOW);
+          digitalWrite(GREEN_LED, LOW);
+          digitalWrite(RED_LED, LOW);
 
-        cooking_duration_sec_g = potToTime(potentiometer_value);
-        lcd.setCursor(0, 0);
-        lcd.print("Time: ");
-        lcd.setCursor(0, 1);
-        lcd.print(formatTime(cooking_duration_sec_g));
-#ifdef DEBUG
-        Serial.print("change time. ");
-        Serial.print("time = ");
-        Serial.println(formatTime(cooking_duration_sec_g));
-#endif
-        break;
+          digitalWrite(POT, HIGH);
+          digitalWrite(THRM, LOW);
+          static unsigned int potentiometer_value = 0;
+          potentiometer_value = 0.8 * potentiometer_value + 0.2 * analogRead(A0);
+
+          if (latest_evt.type == EventType::SW1_PRESS) {
+            lcd.clear();
+            state_g = HEATING;
+            start_cooking_time_sec_g = now_s;
+            break;
+          }
+          else if (latest_evt.type == EventType::SW2_PRESS) {
+            lcd.clear();
+            state_g = CHANGE_TEMP;
+            break;
+          }
+
+          cooking_duration_sec_g = potToTime(potentiometer_value);
+          lcd.setCursor(0, 0);
+          lcd.print("Time: ");
+          lcd.setCursor(0, 1);
+          lcd.print(formatTime(cooking_duration_sec_g));
+          break;
+        }
 
       case HEATING:
-        digitalWrite(GREEN_LED, LOW);
-        digitalWrite(RED_LED, HIGH);
-        if (evt.valid && evt.type == EventType::SW2_PRESS) {
-          lcd.clear();
-          state_g = PAUSED;
+        {
+          digitalWrite(GREEN_LED, LOW);
+          digitalWrite(RED_LED, HIGH);
+          if (latest_evt.type == EventType::SW2_PRESS) {
+            lcd.clear();
+            state_g = PAUSED;
+            break;
+          }
+
+          lcd.setCursor(0, 0);
+          lcd.print("status... ");
+          lcd.setCursor(0, 1);
+          lcd.print(formatTemp(current_temp_g));
+          lcd.write(0);
+          lcd.print("    ");
+          lcd.print(formatTime(cooking_duration_sec_g - (now_s - start_cooking_time_sec_g)));
           break;
         }
-
-        lcd.setCursor(0, 0);
-        lcd.print("status... ");
-        lcd.setCursor(0, 1);
-        lcd.print(formatTemp(current_temp));
-        lcd.write(0);
-        lcd.print("    ");
-        lcd.print(formatTime(cooking_duration_sec_g - (now_s - start_cooking_time_sec_g)));
-
-        control_heater(current_temp);
-
-        if (now_s - start_cooking_time_sec_g >= cooking_duration_sec_g) {
-          digitalWrite(GREEN_LED, HIGH);
-          digitalWrite(RED_LED, LOW);
-          lcd.clear();
-          state_g = CHANGE_TEMP; // FIXME: change back to FINISHED
-          break;
-        }
-
-#ifdef DEBUG
-        Serial.println("heating.");
-#endif
-
-        // Software PWM of relay
-        static unsigned long pwm_t0 = 0ul;
-        static constexpr double pwm_period_ms = 10000;
-        if (now_ms > pwm_t0 && (now_ms - pwm_t0) >= pwm_period_ms) {
-          pwm_t0 = now_ms;
-        }
-        digitalWrite(RELAY, (now_ms - pwm_t0) <= (duty_cycle_g * pwm_period_ms));
-        break;
-
       case PAUSED:
-        digitalWrite(RELAY, LOW);
-        digitalWrite(GREEN_LED, LOW);
-        digitalWrite(RED_LED, HIGH);
-        if (evt.valid && evt.type == EventType::SW1_PRESS) {
-          lcd.clear();
-          state_g = HEATING;
+        {
+          digitalWrite(RELAY, LOW);
+          digitalWrite(GREEN_LED, LOW);
+          digitalWrite(RED_LED, HIGH);
+          if (latest_evt.type == EventType::SW1_PRESS) {
+            lcd.clear();
+            state_g = HEATING;
+            break;
+          }
+          else if (latest_evt.type == EventType::SW2_PRESS) {
+            lcd.clear();
+            state_g = FINISHED;
+            break;
+          }
+
+          lcd.setCursor(0, 0);
+          lcd.print("paused.");
           break;
         }
-        else if (evt.valid && evt.type == EventType::SW2_PRESS) {
-          lcd.clear();
-          state_g = FINISHED;
-          break;
-        }
-
-        lcd.setCursor(0, 0);
-        lcd.print("paused.");
-
-#ifdef DEBUG
-        Serial.println("paused.");
-#endif
-        break;
 
       case FINISHED:
         lcd.setCursor(0, 0);
         lcd.print("finished.");
-#ifdef DEBUG
-        Serial.println("finished.");
-#endif
         // [[fallthrough]]
       default:
         digitalWrite(GREEN_LED, LOW);
@@ -263,7 +264,7 @@ String formatTime(unsigned long t_s) {
   return hr_str + String(":") + min_str;
 }
 
-String formatTemp(unsigned long temp_fahrenheit) {
+String formatTemp(unsigned int temp_fahrenheit) {
   String temp(temp_fahrenheit);
   if (temp_fahrenheit < 10) {
     temp = String("  ") + temp;
@@ -275,13 +276,13 @@ String formatTemp(unsigned long temp_fahrenheit) {
   return temp;
 }
 
-void control_heater(double current_temp) {
+void control_heater() {
   static constexpr double kP = 1.0;
   static constexpr double kI = 0.0;
   static constexpr double kD = 0.0;
   static double integral = 0;
 
-  double error = setpoint_temp_fahrenheit_g - current_temp;
+  double error = setpoint_temp_fahrenheit_g - current_temp_g;
 
   static double last_error = error;
 
