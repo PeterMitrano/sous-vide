@@ -22,8 +22,8 @@ const unsigned int HEATING = 3;
 const unsigned int PAUSED = 4;
 
 // global variables
-unsigned int current_temp_g = 0;
-unsigned int setpoint_temp_fahrenheit_g = 0u;
+int current_temp_g = 0;
+int setpoint_temp_fahrenheit_g = 0u;
 unsigned long start_cooking_time_sec_g = 0ul;
 unsigned int cooking_duration_sec_g = 0;
 double duty_cycle_g = 0;

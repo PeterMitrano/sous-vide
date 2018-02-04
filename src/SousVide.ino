@@ -293,8 +293,8 @@ String formatTemp(unsigned int temp_fahrenheit) {
 }
 
 void control_heater() {
-  static constexpr double kP = 0.17;
-  static constexpr double kI = 0.0;
+  static constexpr double kP = 0.18;
+  static constexpr double kI = 0.00001;
   static constexpr double kFF = 0.002;
   static double integral = 0;
 
@@ -306,6 +306,11 @@ void control_heater() {
 
   double derivative = error - last_error;
   duty_cycle_g = kP * error + kI * integral + kFF * setpoint_temp_fahrenheit_g;
+#ifdef DEBUG
+  Serial.print(integral);
+  Serial.print(", ");
+  Serial.println(duty_cycle_g);
+#endif
 
   // enforce limit on duty cycle
   duty_cycle_g = fmax(fmin(duty_cycle_g, 1.f), 0.f);
