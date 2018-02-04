@@ -242,7 +242,7 @@ double analogToTemp(unsigned int thermistor_value) {
   temp = temp - 273.15;
 
   // FIXME: this is empirically derived from a set of data points
-  temp = exp((thermistor_value + 1220) / 385.0);
+  temp = exp((thermistor_value + 1220) / 385.5);
   return temp;
 }
 
@@ -293,9 +293,9 @@ String formatTemp(unsigned int temp_fahrenheit) {
 }
 
 void control_heater() {
-  static constexpr double kP = 0.16;
+  static constexpr double kP = 0.17;
   static constexpr double kI = 0.0;
-  static constexpr double kFF = 0.0017;
+  static constexpr double kFF = 0.002;
   static double integral = 0;
 
   double error = setpoint_temp_fahrenheit_g - current_temp_g;
