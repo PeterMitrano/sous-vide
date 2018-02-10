@@ -304,6 +304,10 @@ void control_heater() {
 
   integral += error;
 
+  if ((error > 0 && last_error < 0) || (error < 0 && last_error > 0)) {
+    integral = 0;
+  }
+
   double derivative = error - last_error;
   duty_cycle_g = kP * error + kI * integral + kFF * setpoint_temp_fahrenheit_g;
 #ifdef DEBUG
