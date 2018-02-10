@@ -105,6 +105,10 @@ void loop() {
         state_g = CHANGE_TEMP; // FIXME: change back to FINISHED
       }
     }
+    else {
+      // make sure relay is off unless in heating state
+      digitalWrite(RELAY, LOW);
+    }
   }
   // run the display at a mucher slower rate
   if (now_ms - last_print_time > 100) {
@@ -118,7 +122,6 @@ void loop() {
     switch (state_g) {
       case CHANGE_TEMP:
         {
-          digitalWrite(RELAY, LOW);
           digitalWrite(GREEN_LED, LOW);
           digitalWrite(RED_LED, LOW);
 
@@ -146,7 +149,6 @@ void loop() {
 
       case CHANGE_TIME:
         {
-          digitalWrite(RELAY, LOW);
           digitalWrite(GREEN_LED, LOW);
           digitalWrite(RED_LED, LOW);
 
@@ -185,6 +187,12 @@ void loop() {
             break;
           }
 
+          auto time_left = cooking_duration_sec_g - (now_s - start_cooking_time_sec_g);
+          if (time_left == 0) {
+            lcd.clear();
+            state_g = FINISHED;
+          }
+
           lcd.setCursor(0, 0);
           lcd.print("Status");
           lcd.setCursor(0, 1);
@@ -194,13 +202,12 @@ void loop() {
           lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
           lcd.write(0);
           lcd.print(" ");
-          lcd.print(formatTime(cooking_duration_sec_g - (now_s - start_cooking_time_sec_g)));
+          lcd.print(formatTime(time_left));
           break;
         }
 
       case PAUSED:
         {
-          digitalWrite(RELAY, LOW);
           digitalWrite(GREEN_LED, LOW);
           digitalWrite(RED_LED, HIGH);
           if (latest_evt.type == EventType::SW1_PRESS) {
@@ -226,7 +233,6 @@ void loop() {
       default:
         digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, LOW);
-        digitalWrite(RELAY, LOW);
         break;
     }
   }
