@@ -96,14 +96,9 @@ void loop() {
         pwm_t0 = now_ms;
         pwm_off_time = pwm_t0 + duty_cycle_g * pwm_period_ms;
       }
+
       digitalWrite(RELAY, now_ms <= pwm_off_time);
 
-      if (now_s - start_cooking_time_sec_g >= cooking_duration_sec_g) {
-        digitalWrite(GREEN_LED, HIGH);
-        digitalWrite(RED_LED, LOW);
-        lcd.clear();
-        state_g = CHANGE_TEMP; // FIXME: change back to FINISHED
-      }
     }
     else {
       // make sure relay is off unless in heating state
@@ -188,9 +183,11 @@ void loop() {
           }
 
           auto time_left = cooking_duration_sec_g - (now_s - start_cooking_time_sec_g);
+          Serial.println(time_left);
           if (time_left == 0) {
             lcd.clear();
             state_g = FINISHED;
+            break;
           }
 
           lcd.setCursor(0, 0);
@@ -228,7 +225,9 @@ void loop() {
 
       case FINISHED:
         lcd.setCursor(0, 0);
-        lcd.print("finished.");
+        lcd.print("Finished.");
+        lcd.setCursor(0, 1);
+        lcd.print("Enjoy!");
         // [[fallthrough]]
       default:
         digitalWrite(GREEN_LED, LOW);
@@ -259,7 +258,7 @@ double potToTemp(unsigned int potentiometer_value) {
 }
 
 unsigned int potToTime(unsigned int potentiometer_value) {
-  static constexpr unsigned int minimum_time = 30; // X minutes
+  static constexpr unsigned int minimum_time = 1; // X minutes
   static constexpr unsigned int maximum_time = 5 * 60; // X hours
   static constexpr unsigned int intervals = (maximum_time - minimum_time) / 5;
   return (minimum_time + 5 * map(potentiometer_value, 3, 930, 0, intervals)) * 60;
