@@ -2,26 +2,34 @@
 
 My first PCB design project.
 
+### Final Results!
+
+![Tuning the temperature sensing](./docs/images/IMG_20180204_014050_small.jpg)
+![First Test with real food.](./docs/images/IMG_20180204_112510_small.jpg)
+![First Result. Perfect poached eggs!](./docs/images/IMG_20180210_160628_small.jpg)
+
 ### Materials
 
-see the bom.csv file
+see [sous-vide_bom.csv](./kicad_proj/sous-vide_bom_0.3.csv)
 
-## Schematic
+### Schematic
 
-see sous-vide.sch
+see [sous-vide.sch](./kicad_proj/sous-vide.sch)
 
 ### PCB
 
-see sous-vide.kicad_pcb
+see [sous-vide.kicad_pcb](./kicad_proj/sous-vide.kicad_pcb)
 
 Mains power is scary. I used this to calculate trace width/clearance: http://www.desmith.net/NMdS/Electronics/TraceWidth.html
 
-## Random Notes
-
-ADC values for pot range from 417 to 938
-
 ### Revision Notes
 
- - hole size of screw terminals are too small. Should be 1.8542mm
- - label on V+ and V- on heater are backwards (J1)
- -  button pins are wrong
+ - Hole size of screw terminals are too small. Should be 1.8542mm
+ - Screw terminals are a bad idea, use IEC connector
+ - Higher power heater
+ - Buzzer/Dinger!
+ - One wire for thermistor/heater
+ - Something to stir the water around
+ - Label on V+ and V- on heater are backwards (J1)
+ - Button footprint is wrong
+
