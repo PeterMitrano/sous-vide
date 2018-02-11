@@ -258,7 +258,7 @@ double potToTemp(unsigned int potentiometer_value) {
 }
 
 unsigned int potToTime(unsigned int potentiometer_value) {
-  static constexpr unsigned int minimum_time = 1; // X minutes
+  static constexpr unsigned int minimum_time = 30; // X minutes
   static constexpr unsigned int maximum_time = 5 * 60; // X hours
   static constexpr unsigned int intervals = (maximum_time - minimum_time) / 5;
   return (minimum_time + 5 * map(potentiometer_value, 3, 930, 0, intervals)) * 60;
