@@ -4,9 +4,9 @@ My first PCB design project.
 
 ### Final Results!
 
-![Tuning the temperature sensing](./docs/images/IMG_20180204_014050_small.jpg)
-![First Test with real food.](./docs/images/IMG_20180204_112510_small.jpg)
-![First Result. Perfect poached eggs!](./docs/images/IMG_20180210_160628_small.jpg)
+![Tuning the temperature sensing](./docs/images/1.jpg)
+![First Test with real food.](./docs/images/2.jpg)
+![First Result. Perfect poached eggs!](./docs/images/3.jpg)
 
 ### Materials
 
