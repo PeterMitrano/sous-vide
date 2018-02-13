@@ -18,8 +18,9 @@ const unsigned int RELAY = D8;
 const unsigned int FINISHED = 0;
 const unsigned int CHANGE_TEMP = 1;
 const unsigned int CHANGE_TIME = 2;
-const unsigned int HEATING = 3;
-const unsigned int PAUSED = 4;
+const unsigned int PRE_HEATING = 3;
+const unsigned int HEATING = 4;
+const unsigned int PAUSED = 5;
 
 // global variables
 int current_temp_g = 0;

@@ -7,7 +7,7 @@
 Event checkForEvent() {
   static int sw1_c= 0;
   static int sw2_c= 0;
-  static const int kDebounce = 4;
+  static const int kDebounce = 3;
 
   bool sw1_on = !digitalRead(SW1);
   bool sw2_on = !digitalRead(SW2);
@@ -79,7 +79,7 @@ void loop() {
       event_queue.push(evt);
     }
 
-    if (state_g == HEATING) {
+    if (state_g == HEATING || state_g == PRE_HEATING) {
       digitalWrite(POT, LOW);
       digitalWrite(THRM, HIGH);
       //delayMicroseconds(100);
@@ -154,8 +154,7 @@ void loop() {
 
           if (latest_evt.type == EventType::SW1_PRESS) {
             lcd.clear();
-            state_g = HEATING;
-            start_cooking_time_sec_g = now_s;
+            state_g = PRE_HEATING;
             break;
           }
           else if (latest_evt.type == EventType::SW2_PRESS) {
@@ -172,6 +171,48 @@ void loop() {
           break;
         }
 
+      case PRE_HEATING:
+        {
+          static bool at_temp = false;
+          if (current_temp_g >= 74 || at_temp) {
+            at_temp = true;
+            if (latest_evt.type == EventType::SW1_PRESS) {
+              lcd.clear();
+              start_cooking_time_sec_g = now_s;
+              state_g = HEATING;
+              break;
+            }
+            digitalWrite(GREEN_LED, LOW);
+            digitalWrite(RED_LED, HIGH);
+
+            lcd.setCursor(0, 0);
+            lcd.print("Pre-Heat Complete");
+          }
+          else {
+            static unsigned long last_blink_ms = now_ms;
+            static bool blink_state = true;
+
+            if (now_ms - last_blink_ms > 1000) {
+              blink_state = !blink_state;
+              last_blink_ms = now_ms;
+            }
+
+            digitalWrite(GREEN_LED, LOW);
+            digitalWrite(RED_LED, blink_state);
+
+
+            lcd.setCursor(0, 0);
+            lcd.print("Pre-Heating");
+          }
+
+          lcd.setCursor(0, 1);
+          lcd.print(formatTemp(current_temp_g));
+          lcd.write(0);
+          lcd.print(" ");
+          lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
+
+          break;
+        }
       case HEATING:
         {
           digitalWrite(GREEN_LED, LOW);
@@ -183,7 +224,6 @@ void loop() {
           }
 
           auto time_left = cooking_duration_sec_g - (now_s - start_cooking_time_sec_g);
-          Serial.println(time_left);
           if (time_left == 0) {
             lcd.clear();
             state_g = FINISHED;
