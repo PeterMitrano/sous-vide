@@ -1,7 +1,12 @@
 #pragma once
 
+#include <deque>
 #include <Arduino.h>
 #include <Adafruit_LiquidCrystal.h>
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
 
 // pins
 const unsigned int RED_LED = D0;
@@ -23,24 +28,11 @@ const unsigned int HEATING = 4;
 const unsigned int PAUSED = 5;
 
 // global variables
-int current_temp_g = 0;
-int setpoint_temp_fahrenheit_g = 0u;
-unsigned long start_cooking_time_sec_g = 0ul;
-unsigned int cooking_duration_sec_g = 0;
-double duty_cycle_g = 0;
-unsigned int state_g = CHANGE_TEMP;
-Adafruit_LiquidCrystal lcd(0);
-
-byte degree_char[8] = {
-	0b00110,
-	0b01001,
-	0b01001,
-	0b00110,
-	0b00000,
-	0b00000,
-	0b00000,
-	0b00000
-};
+extern int current_temp_g;
+extern int setpoint_temp_fahrenheit_g;
+extern int time_left_sec_g;
+extern ESP8266WebServer server;
+extern std::deque<int> temps;
 
 // data structures
 enum EventType {
@@ -57,27 +49,27 @@ struct Event {
 /**
  * @return temp in fahrenheit
  */
-double analogToTemp(unsigned int thermistor_value);
+double analogToTemp(const unsigned int thermistor_value);
 
 /**
  * @return temp in fahrenheit
  */
-double potToTemp(unsigned int potentiometer_value);
+double potToTemp(const unsigned int potentiometer_value);
 
 /**
  * @return time in seconds
  */
-unsigned int potToTime(unsigned int potentiometer_value);
+unsigned int potToTime(const unsigned int potentiometer_value);
 
 /**
  * @ return time formatted as hh:mm
  */
-String formatTime(unsigned long t_s);
+String formatTime(const unsigned long t_s);
 
 /**
  * @ return time formatted as ###°F
  */
-String formatTemp(unsigned int temp_fahrenheit);
+String formatTemp(const unsigned int temp_fahrenheit);
 
 /**
  * For a given desired teperature, there is a duty cycle that acheives it.
@@ -86,3 +78,4 @@ String formatTemp(unsigned int temp_fahrenheit);
  *
  */
 void control_heater();
+

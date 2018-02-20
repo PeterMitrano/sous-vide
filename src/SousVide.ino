@@ -3,6 +3,23 @@
 #include <queue>
 
 #include "sous_vide.h"
+#include "server.h"
+
+// global variables
+int current_temp_g = 0;
+int setpoint_temp_fahrenheit_g = 0;
+int time_left_sec_g = 0;
+std::deque<int> temps = {};
+unsigned long start_cooking_time_sec_g = 0ul;
+unsigned int cooking_duration_sec_g = 0;
+double duty_cycle_g = 0;
+unsigned int state_g = CHANGE_TEMP;
+Adafruit_LiquidCrystal lcd(0);
+const char ssid[] = "ForbiddenFruitTemp";
+const char password[] = "RoryAndrewPeter";
+byte degree_char[8] = {0b00110, 0b01001, 0b01001, 0b00110, 0b00000, 0b00000, 0b00000, 0b00000};
+
+ESP8266WebServer server(80);
 
 Event checkForEvent() {
   static int sw1_c= 0;
@@ -59,11 +76,36 @@ void setup() {
   lcd.createChar(0, degree_char);
 
   Serial.begin(9600);
+
+  WiFi.begin(ssid, password);
+
+  // Wait for connection
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  if (MDNS.begin("esp8266")) {
+    Serial.println("MDNS responder started");
+  }
+
+  server.on("/", handleRoot);
+
+  server.onNotFound(handleNotFound);
+
+  server.begin();
+  Serial.println("HTTP server started");
 }
 
 void loop() {
   static unsigned long last_event_time = 0ul;
   static unsigned long last_print_time = 0ul;
+  static unsigned long last_log_time_s = 0ul;
   unsigned long now_ms = millis();
   unsigned long now_s = now_ms / 1000;
 
@@ -107,6 +149,10 @@ void loop() {
   }
   // run the display at a mucher slower rate
   if (now_ms - last_print_time > 100) {
+
+    // also handle web server here
+    server.handleClient();
+
     last_print_time = now_ms;
     Event latest_evt;
     if (!event_queue.empty()) {
@@ -174,7 +220,7 @@ void loop() {
       case PRE_HEATING:
         {
           static bool at_temp = false;
-          if (current_temp_g >= 74 || at_temp) {
+          if (current_temp_g >= setpoint_temp_fahrenheit_g || at_temp) {
             at_temp = true;
             if (latest_evt.type == EventType::SW1_PRESS) {
               lcd.clear();
@@ -186,7 +232,7 @@ void loop() {
             digitalWrite(RED_LED, HIGH);
 
             lcd.setCursor(0, 0);
-            lcd.print("Pre-Heat Complete");
+            lcd.print("Pre-Heat Done");
           }
           else {
             static unsigned long last_blink_ms = now_ms;
@@ -223,8 +269,8 @@ void loop() {
             break;
           }
 
-          auto time_left = cooking_duration_sec_g - (now_s - start_cooking_time_sec_g);
-          if (time_left == 0) {
+          time_left_sec_g = cooking_duration_sec_g - (now_s - start_cooking_time_sec_g);
+          if (time_left_sec_g == 0) {
             lcd.clear();
             state_g = FINISHED;
             break;
@@ -239,7 +285,7 @@ void loop() {
           lcd.print(formatTemp(setpoint_temp_fahrenheit_g));
           lcd.write(0);
           lcd.print(" ");
-          lcd.print(formatTime(time_left));
+          lcd.print(formatTime(time_left_sec_g));
           break;
         }
 
@@ -275,9 +321,17 @@ void loop() {
         break;
     }
   }
+
+  static unsigned int head = 0u;
+  if (now_s - last_log_time_s > 5) {
+    last_log_time_s = now_s;
+    if (state_g == PRE_HEATING || state_g == HEATING) {
+      temps.push_back(current_temp_g);
+    }
+  }
 }
 
-double analogToTemp(unsigned int thermistor_value) {
+double analogToTemp(const unsigned int thermistor_value) {
   static constexpr int ADC_TOP = 1023;
   static constexpr int BETA = 3977;
   static constexpr double LNA = -4.12858298874828;
@@ -291,20 +345,36 @@ double analogToTemp(unsigned int thermistor_value) {
   return temp;
 }
 
-double potToTemp(unsigned int potentiometer_value) {
-  static constexpr int minimum_temp = 100; // degrees F
-  static constexpr int maximum_temp = 170; // degrees F
+double potToTemp(const unsigned int potentiometer_value) {
+  static constexpr int minimum_temp = 120; // degrees F
+  static constexpr int maximum_temp = 190; // degrees F
   return map(potentiometer_value, 3, 938, minimum_temp, maximum_temp);
 }
 
-unsigned int potToTime(unsigned int potentiometer_value) {
+unsigned int potToTime(const unsigned int potentiometer_value) {
   static constexpr unsigned int minimum_time = 30; // X minutes
-  static constexpr unsigned int maximum_time = 5 * 60; // X hours
-  static constexpr unsigned int intervals = (maximum_time - minimum_time) / 5;
-  return (minimum_time + 5 * map(potentiometer_value, 3, 930, 0, intervals)) * 60;
+  static constexpr unsigned int maximum_time = 24 * 60; // X hours
+  static constexpr unsigned int minimum_pot = 3;
+  static constexpr unsigned int maximum_pot = 930;
+  const unsigned int constrained_pot_value = max(min(potentiometer_value, maximum_pot), minimum_pot);
+  const double a = (maximum_time - minimum_time) / (pow(maximum_pot,2) - 2.0*minimum_pot*maximum_pot);
+  const double b = -2*a*minimum_pot;
+  int time_minutes = (a*pow(constrained_pot_value, 2) + b*constrained_pot_value + minimum_time);
+
+  if (time_minutes > 12*60) {
+    time_minutes -= time_minutes % 60;
+  }
+  else if (time_minutes > 6*60) {
+    time_minutes -= time_minutes % 30;
+  }
+  else if (time_minutes > 60) {
+    time_minutes -= time_minutes % 15;
+  }
+
+  return time_minutes * 60;
 }
 
-String formatTime(unsigned long t_s) {
+String formatTime(const unsigned long t_s) {
   unsigned long min = (t_s / 60) % 60;
   unsigned long h = t_s / 3600;
   String hr_str("00");
@@ -325,7 +395,7 @@ String formatTime(unsigned long t_s) {
   return hr_str + String(":") + min_str;
 }
 
-String formatTemp(unsigned int temp_fahrenheit) {
+String formatTemp(const unsigned int temp_fahrenheit) {
   String temp(temp_fahrenheit);
   if (temp_fahrenheit < 10) {
     temp = String("  ") + temp;
@@ -340,29 +410,35 @@ String formatTemp(unsigned int temp_fahrenheit) {
 void control_heater() {
   static constexpr double kP = 0.18;
   static constexpr double kI = 0.00001;
-  static constexpr double kFF = 0.002;
+  static constexpr double kFF = 0.0018;
   static double integral = 0;
 
   double error = setpoint_temp_fahrenheit_g - current_temp_g;
 
   static double last_error = error;
 
-  integral += error;
+  if (error > 2) {
+    integral += error;
 
-  if ((error > 0 && last_error < 0) || (error < 0 && last_error > 0)) {
-    integral = 0;
-  }
+    if ((error > 0 && last_error < 0) || (error < 0 && last_error > 0)) {
+      integral = 0;
+    }
 
-  double derivative = error - last_error;
-  duty_cycle_g = kP * error + kI * integral + kFF * setpoint_temp_fahrenheit_g;
+    double derivative = error - last_error;
+    duty_cycle_g = kP * error + kI * integral + kFF * setpoint_temp_fahrenheit_g;
+
+    // enforce limit on duty cycle
+    duty_cycle_g = fmax(fmin(duty_cycle_g, 1.f), 0.f);
+
+    last_error = error;
+
 #ifdef DEBUG
   Serial.print(integral);
   Serial.print(", ");
   Serial.println(duty_cycle_g);
 #endif
-
-  // enforce limit on duty cycle
-  duty_cycle_g = fmax(fmin(duty_cycle_g, 1.f), 0.f);
-
-  last_error = error;
+  }
+  else {
+    duty_cycle_g = 0;
+  }
 }
