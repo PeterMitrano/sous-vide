@@ -323,10 +323,13 @@ void loop() {
   }
 
   static unsigned int head = 0u;
-  if (now_s - last_log_time_s > 5) {
+  if (now_s - last_log_time_s > 30) {
     last_log_time_s = now_s;
     if (state_g == PRE_HEATING || state_g == HEATING) {
       temps.push_back(current_temp_g);
+      if (temps.size() > 1000) {
+        temps.pop_front();
+      }
     }
   }
 }
