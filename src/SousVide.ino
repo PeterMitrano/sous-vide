@@ -411,8 +411,8 @@ String formatTemp(const unsigned int temp_fahrenheit) {
 }
 
 void control_heater() {
-  static constexpr double kP = 0.18;
-  static constexpr double kI = 0.00001;
+  static constexpr double kP = 0.2;
+  static constexpr double kI = 0.0001;
   static constexpr double kFF = 0.0018;
   static double integral = 0;
 
@@ -420,7 +420,7 @@ void control_heater() {
 
   static double last_error = error;
 
-  if (error > 2) {
+  if (error > -2) {
     integral += error;
 
     if ((error > 0 && last_error < 0) || (error < 0 && last_error > 0)) {
