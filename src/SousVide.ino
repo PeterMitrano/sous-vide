@@ -222,17 +222,10 @@ void loop() {
           static bool at_temp = false;
           if (current_temp_g >= setpoint_temp_fahrenheit_g || at_temp) {
             at_temp = true;
-            if (latest_evt.type == EventType::SW1_PRESS) {
-              lcd.clear();
-              start_cooking_time_sec_g = now_s;
-              state_g = HEATING;
-              break;
-            }
-            digitalWrite(GREEN_LED, LOW);
-            digitalWrite(RED_LED, HIGH);
-
-            lcd.setCursor(0, 0);
-            lcd.print("Pre-Heat Done");
+            lcd.clear();
+            start_cooking_time_sec_g = now_s;
+            state_g = HEATING;
+            break;
           }
           else {
             static unsigned long last_blink_ms = now_ms;
