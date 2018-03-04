@@ -3,8 +3,6 @@
 #include <deque>
 #include <Arduino.h>
 #include <Adafruit_LiquidCrystal.h>
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 
@@ -20,12 +18,16 @@ const unsigned int DAT = D7;
 const unsigned int RELAY = D8;
 
 // states
-const unsigned int FINISHED = 0;
-const unsigned int CHANGE_TEMP = 1;
-const unsigned int CHANGE_TIME = 2;
-const unsigned int PRE_HEATING = 3;
-const unsigned int HEATING = 4;
-const unsigned int PAUSED = 5;
+const unsigned int SCAN_SSID = 0;
+const unsigned int SET_SSID = 1;
+const unsigned int SET_PASSWORD = 2;
+const unsigned int WAITING_FOR_CONNECTION = 3;
+const unsigned int CHANGE_TEMP = 4;
+const unsigned int CHANGE_TIME = 5;
+const unsigned int PRE_HEATING = 6;
+const unsigned int HEATING = 7;
+const unsigned int PAUSED = 8;
+const unsigned int FINISHED = 9;
 
 // global variables
 extern int current_temp_g;
@@ -38,6 +40,8 @@ extern std::deque<int> temps;
 enum EventType {
   SW1_PRESS,
   SW2_PRESS,
+  SW1_LONG_PRESS,
+  SW2_LONG_PRESS,
   NONE
 };
 

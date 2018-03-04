@@ -13,10 +13,8 @@ std::deque<int> temps = {};
 unsigned long start_cooking_time_sec_g = 0ul;
 unsigned int cooking_duration_sec_g = 0;
 double duty_cycle_g = 0;
-unsigned int state_g = CHANGE_TEMP;
+unsigned int state_g = SCAN_SSID;
 Adafruit_LiquidCrystal lcd(0);
-const char ssid[] = "ForbiddenFruitTemp";
-const char password[] = "RoryAndrewPeter";
 byte degree_char[8] = {0b00110, 0b01001, 0b01001, 0b00110, 0b00000, 0b00000, 0b00000, 0b00000};
 
 ESP8266WebServer server(80);
@@ -25,15 +23,22 @@ Event checkForEvent() {
   static int sw1_c= 0;
   static int sw2_c= 0;
   static const int kDebounce = 3;
+  static const int kLongPress = 9;
 
   bool sw1_on = !digitalRead(SW1);
   bool sw2_on = !digitalRead(SW2);
 
-  if (sw1_on && sw1_c <= kDebounce) {
+  if (sw1_on && sw1_c <= kLongPress) {
     sw1_c++;
   }
   else if (!sw1_on) {
-    if (sw1_c > kDebounce) {
+    if (sw1_c > kLongPress) {
+      Event sw1_event;
+      sw1_event.type = SW1_LONG_PRESS;
+      sw1_c = 0;
+      return sw1_event;
+    }
+    else if (sw1_c > kDebounce) {
       Event sw1_event;
       sw1_event.type = SW1_PRESS;
       sw1_c = 0;
@@ -42,11 +47,17 @@ Event checkForEvent() {
     sw1_c = 0;
   }
 
-  if (sw2_on && sw2_c <= kDebounce) {
+  if (sw2_on && sw2_c <= kLongPress) {
     sw2_c++;
   }
   else if (!sw2_on) {
-    if (sw2_c > kDebounce) {
+    if (sw2_c > kLongPress) {
+      Event sw2_event;
+      sw2_event.type = SW2_LONG_PRESS;
+      sw2_c = 0;
+      return sw2_event;
+    }
+    else if (sw2_c > kDebounce) {
       Event sw2_event;
       sw2_event.type = SW2_PRESS;
       sw2_c = 0;
@@ -68,45 +79,35 @@ void setup() {
   pinMode(POT, OUTPUT);
   pinMode(THRM, OUTPUT);
 
-  Wire.begin(DAT, CLK);
   lcd.begin(16, 2);
   lcd.setBacklight(HIGH);
   lcd.createChar(0, degree_char);
   lcd.clear();
 
-  lcd.setCursor(0, 0);
-  lcd.println("Connecting to...");
-  lcd.setCursor(0, 1);
-  lcd.println(ssid);
-
   Serial.begin(9600);
 
-  WiFi.begin(ssid, password);
+  WiFi.begin();
 
-  // Wait for connection
-  unsigned long wireless_check_start_ms = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - wireless_check_start_ms < 10000) {
-    delay(500);
+  // Try to connect to the last seen network. If it works, skip the wifi setup steps;
+  WiFi.setAutoConnect(true);
+  WiFi.setAutoReconnect(true);
+  unsigned long start_wifi_ms = millis();
+  while (!WiFi.isConnected() && millis() - start_wifi_ms < 5000) {
+    delay(100);
+  }
+  if (WiFi.isConnected()) {
+    Serial.println("auto connect successful");
+    state_g = CHANGE_TEMP;
   }
 
-  lcd.clear();
+	WiFi.mode(WIFI_STA);
+	WiFi.disconnect();
 
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
-  if (MDNS.begin("esp8266")) {
-    Serial.println("MDNS responder started");
-  }
+  MDNS.begin("esp8266");
 
   server.on("/", handleRoot);
-
   server.onNotFound(handleNotFound);
-
   server.begin();
-  Serial.println("HTTP server started");
 }
 
 void loop() {
@@ -167,7 +168,102 @@ void loop() {
       event_queue.pop();
     }
 
+    static int num_ssid = 0;
+    static String ssid;
     switch (state_g) {
+      case SCAN_SSID:
+        {
+          lcd.setCursor(0, 0);
+          lcd.print("Select a network:");
+          lcd.setCursor(0, 1);
+          lcd.print("Scanning...");
+          num_ssid = WiFi.scanNetworks();
+          state_g = SET_SSID;
+          break;
+        }
+      case SET_SSID:
+        {
+          digitalWrite(POT, HIGH);
+          digitalWrite(THRM, LOW);
+          static unsigned int potentiometer_value = 0;
+          potentiometer_value = 0.7 * potentiometer_value + 0.3 * analogRead(A0);
+          int ssid_idx = map(potentiometer_value, 0, 1024, 0, num_ssid);
+
+          ssid = WiFi.SSID(ssid_idx);
+          char ssid_buff[16];
+          snprintf(ssid_buff, 16, "%1i %-14s", ssid_idx, ssid.c_str());
+          lcd.setCursor(0, 1);
+          lcd.print(ssid_buff);
+
+          if (latest_evt.type == EventType::SW1_PRESS) {
+            lcd.clear();
+            state_g = SET_PASSWORD;
+            break;
+          }
+          else if (latest_evt.type == EventType::SW2_PRESS) {
+            lcd.clear();
+            state_g = SCAN_SSID;
+            break;
+          }
+          break;
+        }
+      case SET_PASSWORD:
+        {
+          static int char_idx = 0;
+          static char password[17] = "1248163264\0";
+
+          digitalWrite(POT, HIGH);
+          digitalWrite(THRM, LOW);
+          static unsigned int potentiometer_value = 0;
+          potentiometer_value = 0.1 * potentiometer_value + 0.9 * analogRead(A0);
+          char c = (char)map(potentiometer_value, 0, 1024, 20, 117);
+          password[char_idx] = c;
+
+          lcd.setCursor(0, 0);
+          lcd.print("Enter Password");
+          lcd.setCursor(0, 1);
+          char password_buff[17];
+          snprintf(password_buff, 17, "%-16s", password); // TODO: this is undefined behavior technically
+          lcd.print(password_buff);
+
+          if (latest_evt.type == EventType::SW1_PRESS) {
+            WiFi.begin(ssid.c_str(), (char*)password);
+            WiFi.reconnect();
+            lcd.clear();
+            state_g = WAITING_FOR_CONNECTION;
+            break;
+          }
+          else if (latest_evt.type == EventType::SW2_LONG_PRESS) {
+            password[char_idx] = '\0';
+            --char_idx;
+            break;
+          }
+          else if (latest_evt.type == EventType::SW2_PRESS) {
+            ++char_idx;
+            break;
+          }
+
+          break;
+        }
+      case WAITING_FOR_CONNECTION:
+        {
+          lcd.setCursor(0, 0);
+          lcd.print("Connecting...");
+
+          if (WiFi.isConnected()) {
+            String ip = WiFi.localIP().toString();
+
+            lcd.setCursor(0, 0);
+            lcd.print("Connected");
+            lcd.setCursor(0, 1);
+            lcd.print(ip);
+
+            delay(1000);
+
+            state_g = CHANGE_TEMP;
+          }
+          break;
+        }
       case CHANGE_TEMP:
         {
           digitalWrite(GREEN_LED, LOW);
@@ -333,6 +429,7 @@ void loop() {
     }
   }
 }
+
 
 double analogToTemp(const unsigned int thermistor_value) {
   static constexpr int ADC_TOP = 1023;
