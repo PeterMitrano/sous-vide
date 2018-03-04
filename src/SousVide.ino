@@ -96,14 +96,12 @@ void setup() {
     delay(100);
   }
   if (WiFi.isConnected()) {
-    Serial.println("auto connect successful");
+    MDNS.begin("sous-vide");
     state_g = CHANGE_TEMP;
   }
 
 	WiFi.mode(WIFI_STA);
 	WiFi.disconnect();
-
-  MDNS.begin("esp8266");
 
   server.on("/", handleRoot);
   server.onNotFound(handleNotFound);
@@ -208,7 +206,7 @@ void loop() {
       case SET_PASSWORD:
         {
           static int char_idx = 0;
-          static char password[17] = "1248163264\0";
+          static char password[17];
 
           digitalWrite(POT, HIGH);
           digitalWrite(THRM, LOW);
@@ -225,6 +223,9 @@ void loop() {
           lcd.print(password_buff);
 
           if (latest_evt.type == EventType::SW1_PRESS) {
+            if (char_idx < 16) {
+              password[char_idx + 1] = '\0';
+            }
             WiFi.begin(ssid.c_str(), (char*)password);
             WiFi.reconnect();
             lcd.clear();
@@ -251,6 +252,9 @@ void loop() {
           if (WiFi.isConnected()) {
             String ip = WiFi.localIP().toString();
 
+            MDNS.begin("sous-vide");
+
+            lcd.clear();
             lcd.setCursor(0, 0);
             lcd.print("Connected");
             lcd.setCursor(0, 1);
@@ -507,7 +511,7 @@ String formatTemp(const unsigned int temp_fahrenheit) {
 }
 
 void control_heater() {
-  static constexpr double kP = 0.2;
+  static constexpr double kP = 0.18;
   static constexpr double kI = 0.0001;
   static constexpr double kFF = 0.0018;
   static double integral = 0;
