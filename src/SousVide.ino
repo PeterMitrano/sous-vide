@@ -157,8 +157,6 @@ void loop() {
   }
   // run the display at a mucher slower rate
   if (now_ms - last_print_time > 100) {
-
-    // also handle web server here
     server.handleClient();
 
     last_print_time = now_ms;
@@ -260,6 +258,7 @@ void loop() {
 
             delay(1000);
 
+            lcd.clear();
             state_g = CHANGE_TEMP;
           }
           break;
