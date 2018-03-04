@@ -70,20 +70,27 @@ void setup() {
 
   Wire.begin(DAT, CLK);
   lcd.begin(16, 2);
-  lcd.clear();
   lcd.setBacklight(HIGH);
-  lcd.setCursor(0, 0);
   lcd.createChar(0, degree_char);
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.println("Connecting to...");
+  lcd.setCursor(0, 1);
+  lcd.println(ssid);
 
   Serial.begin(9600);
 
   WiFi.begin(ssid, password);
 
   // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
+  unsigned long wireless_check_start_ms = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - wireless_check_start_ms < 10000) {
     delay(500);
-    Serial.print(".");
   }
+
+  lcd.clear();
+
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
