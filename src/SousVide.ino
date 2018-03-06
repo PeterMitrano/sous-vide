@@ -88,13 +88,19 @@ void setup() {
 
   WiFi.begin();
 
+  lcd.setCursor(0, 0);
+  lcd.print("Scanning...");
+
   // Try to connect to the last seen network. If it works, skip the wifi setup steps;
   WiFi.setAutoConnect(true);
   WiFi.setAutoReconnect(true);
   unsigned long start_wifi_ms = millis();
-  while (!WiFi.isConnected() && millis() - start_wifi_ms < 5000) {
+  while (!WiFi.isConnected() && millis() - start_wifi_ms < 8000) {
     delay(100);
   }
+
+  lcd.clear();
+
   if (WiFi.isConnected()) {
     MDNS.begin("sous-vide");
     state_g = CHANGE_TEMP;
