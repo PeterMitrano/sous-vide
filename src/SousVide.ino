@@ -136,7 +136,6 @@ void loop() {
     if (state_g == HEATING || state_g == PRE_HEATING) {
       digitalWrite(POT, LOW);
       digitalWrite(THRM, HIGH);
-      //delayMicroseconds(100);
       unsigned int thermistor_value = analogRead(A0);
       current_temp_g = analogToTemp(thermistor_value);
 
@@ -441,16 +440,16 @@ void loop() {
 
 
 double analogToTemp(const unsigned int thermistor_value) {
-  static constexpr int ADC_TOP = 1023;
-  static constexpr int BETA = 3977;
-  static constexpr double LNA = -4.12858298874828;
-  static constexpr int R_REF = 1100;
-  double temp = (R_REF * thermistor_value) / (ADC_TOP - thermistor_value);
-  temp = BETA / (log(temp) - LNA);
-  temp = temp - 273.15;
+  //static constexpr int ADC_TOP = 1023;
+  //static constexpr int BETA = 3977;
+  //static constexpr double LNA = -4.12858298874828;
+  //static constexpr int R_REF = 1100;
+  //double temp = (R_REF * thermistor_value) / (ADC_TOP - thermistor_value);
+  //temp = BETA / (log(temp) - LNA);
+  //temp = temp - 273.15;
 
   // FIXME: this is empirically derived from a set of data points
-  temp = exp((thermistor_value + 1220) / 385.5);
+  double temp = exp((thermistor_value + 1220) / 382.7);
   return temp;
 }
 
